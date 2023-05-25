@@ -3,6 +3,7 @@
 .DS_Store
 out/
 dist/
+.idea/
 Log.txt
 
 # Gradle and Maven with auto-import
