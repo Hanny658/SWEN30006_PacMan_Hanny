@@ -12,8 +12,6 @@ public class Portal extends Entity implements Collidable
 	public enum PortColor {
 		White, Yellow, DarkGold, DarkGray
 	}
-	private static ArrayList<Portal> allPortals = new ArrayList<>();
-	private ArrayList<Entity> tpEntity = new ArrayList<>();
 	public PortColor color;
 
 	// Sprite images path
@@ -26,7 +24,6 @@ public class Portal extends Entity implements Collidable
 	{
 		super(getImgPath(c));
 		this.color = c;
-		Portal.allPortals.add(this);
 	}
 
 	/** Function that finds correct image for initialise portal entity, return null if not found */

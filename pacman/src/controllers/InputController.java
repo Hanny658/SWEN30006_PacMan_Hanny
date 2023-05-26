@@ -59,7 +59,9 @@ public class InputController implements GGKeyRepeatListener
 
 		var direction = KEY_TO_DIRECTION.get(keyCode);
 		_entityToControl.setDirection(direction);
-		_entityToControl.moveTo(_entityToControl.getDirection());
-		CollisionManager.detectCollision(_entityToControl, _entityToControl.gameGrid);
+
+		// Only detect collision if player actually "moves" (blocking by walls won't count)
+		if (_entityToControl.moveTo(_entityToControl.getDirection()))
+			CollisionManager.detectCollision(_entityToControl, _entityToControl.gameGrid);
 	}
 }
