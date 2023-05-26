@@ -1,4 +1,4 @@
-package matachi.mapeditor.editor;
+package src.mapeditor.editor;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;

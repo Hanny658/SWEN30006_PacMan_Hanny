@@ -121,39 +121,6 @@ public class Game extends GameGrid
 		addActor(tx5, new Location(tx5X, tx5Y), Location.NORTH);
 		addActor(_player, new Location(playerX, playerY));
 
-		// Repeat for multiverse monsters
-		if (_gameVersion == GameVersion.MULTIVERSE)
-		{
-			Monster orion = new Orion();
-			Monster alien = new Alien();
-			Monster wizard = new Wizard();
-
-			orion.setSeed(seed);
-			alien.setSeed(seed);
-			wizard.setSeed(seed);
-
-			orion.setSlowDown(SLOW_DOWN_FACTOR);
-			alien.setSlowDown(SLOW_DOWN_FACTOR);
-			wizard.setSlowDown(SLOW_DOWN_FACTOR);
-
-			String[] orionLocations = properties.getProperty("Orion.location").split(",");
-			String[] alienLocations = properties.getProperty("Alien.location").split(",");
-			String[] wizardLocations = properties.getProperty("Wizard.location").split(",");
-
-			int orionX = Integer.parseInt(orionLocations[0]);
-			int orionY = Integer.parseInt(orionLocations[1]);
-
-			int alienX = Integer.parseInt(alienLocations[0]);
-			int alienY = Integer.parseInt(alienLocations[1]);
-
-			int wizardX = Integer.parseInt(wizardLocations[0]);
-			int wizardY = Integer.parseInt(wizardLocations[1]);
-
-			addActor(orion, new Location(orionX, orionY), Location.NORTH);
-			addActor(alien, new Location(alienX, alienY), Location.NORTH);
-			addActor(wizard, new Location(wizardX, wizardY), Location.NORTH);
-		}
-
 		// Freeze tx5 for 5 seconds
 		tx5.setStateForSeconds(MonsterStates.FROZEN, 5);
 	}

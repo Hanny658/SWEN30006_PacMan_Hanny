@@ -1,4 +1,4 @@
-package matachi.mapeditor.editor;
+package src.mapeditor.editor;
 
 /**
  * Information that the GUI has, which its components also need access to. Like

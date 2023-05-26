@@ -9,12 +9,13 @@ package src;
 import src.controllers.GameCallback;
 import src.controllers.LogController;
 import src.controllers.MapLoader;
+import src.mapeditor.Editor;
 
 import java.util.Properties;
 
 public class Driver
 {
-	public static final String DEFAULT_PROPERTIES_PATH = "pacman/properties/test1.properties";
+	public static final String DEFAULT_PROPERTIES_PATH = "properties/test1.properties";
 
 	/**
 	 * Starting point
@@ -23,6 +24,10 @@ public class Driver
 	 */
 	public static void main(String[] args)
 	{
+		boolean MAYBE = true;
+		Editor.run();
+		if (MAYBE)
+			return;
 		// Load property file from terminal argument, otherwise load default property
 		String propertiesPath = DEFAULT_PROPERTIES_PATH;
 		if (args.length > 0)

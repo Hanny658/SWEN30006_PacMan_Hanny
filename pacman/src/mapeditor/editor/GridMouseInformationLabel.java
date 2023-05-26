@@ -1,4 +1,4 @@
-package matachi.mapeditor.editor;
+package src.mapeditor.editor;
 
 import java.awt.Component;
 import java.awt.Dimension;
