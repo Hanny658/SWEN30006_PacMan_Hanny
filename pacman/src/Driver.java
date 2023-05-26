@@ -9,6 +9,7 @@ package src;
 import src.controllers.GameCallback;
 import src.controllers.LogController;
 import src.controllers.MapLoader;
+import src.io.GameMapXmlParser;
 import src.mapeditor.Editor;
 
 import java.util.Properties;
@@ -25,7 +26,16 @@ public class Driver
 	public static void main(String[] args)
 	{
 		boolean MAYBE = true;
-		Editor.run();
+		//Editor.run();
+		GameMapXmlParser parser = new GameMapXmlParser();
+		try
+		{
+			parser.test();
+		}
+		catch (Exception e)
+		{
+			// Who cares
+		}
 		if (MAYBE)
 			return;
 		// Load property file from terminal argument, otherwise load default property
