@@ -60,6 +60,6 @@ public class InputController implements GGKeyRepeatListener
 		var direction = KEY_TO_DIRECTION.get(keyCode);
 		_entityToControl.setDirection(direction);
 		_entityToControl.moveTo(_entityToControl.getDirection());
-		CollisionController.detectCollision(_entityToControl, _entityToControl.gameGrid);
+		CollisionManager.detectCollision(_entityToControl, _entityToControl.gameGrid);
 	}
 }

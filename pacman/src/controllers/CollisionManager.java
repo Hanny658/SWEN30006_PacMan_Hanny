@@ -1,7 +1,7 @@
 /**
  * Created by Stephen Zhang & Hanny Zhang (Team 08)
  *
- * @see src.controllers.CollisionController
+ * @see src.controllers.CollisionManager
  */
 
 package src.controllers;
@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @see Collidable
  */
-public class CollisionController
+public class CollisionManager
 {
 	/**
 	 * Gets a list of Collidables that are at the given Location in the given GameGrid

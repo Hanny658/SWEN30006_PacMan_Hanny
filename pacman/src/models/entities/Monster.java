@@ -7,7 +7,7 @@
 package src.models.entities;
 
 import ch.aplu.jgamegrid.Location;
-import src.controllers.CollisionController;
+import src.controllers.CollisionManager;
 import src.controllers.LogController;
 import src.models.Collidable;
 import src.models.Entity;
@@ -73,7 +73,7 @@ public abstract class Monster extends Entity implements Collidable
 
 		walkApproach();
 		setHorzMirror(!(getDirection() > 150) || !(getDirection() < 210));
-		CollisionController.detectCollision(this, this.gameGrid);
+		CollisionManager.detectCollision(this, this.gameGrid);
 	}
 
 	private void updateStateTimer()

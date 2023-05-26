@@ -10,18 +10,16 @@ package src;
 
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
-import src.controllers.CollisionController;
+import src.controllers.CollisionManager;
 import src.controllers.InputController;
 import src.controllers.LogController;
 import src.controllers.MapLoader;
 import src.models.Collidable;
 import src.models.GameVersion;
-import src.models.MonsterStates;
 import src.models.entities.GoldPiece;
 import src.models.entities.Monster;
 import src.models.entities.PacMan;
 import src.models.entities.Pill;
-import src.models.entities.monsters.*;
 
 import java.util.List;
 import java.util.Properties;
@@ -41,8 +39,8 @@ public class Game extends GameGrid
 	private static final boolean ENGINE_DEBUG_MODE = false;
 	private static final int SLOW_DOWN_FACTOR = 3;
 	private static Game _instance = null;
-	private final PacMan _player = new PacMan();
-	private final InputController _playerInput = new InputController(_player);
+	private PacMan _player;
+	private InputController _playerInput;
 	private final GameVersion _gameVersion;
 	private int _score = 0;
 	private int _numPillsEaten = 0;
@@ -58,14 +56,24 @@ public class Game extends GameGrid
 
 		_gameVersion = GameVersion.getGameVersion(properties.getProperty("version"));
 
+		//MapLoader.loadWithProperty(this, properties);
+		MapLoader.loadFromXml(this, "who cares");
+
 		//Setup for auto test
+		for (var entity : this.getActors())
+		{
+			System.out.println(entity.getClass().getSimpleName());
+			if (entity instanceof PacMan)
+			{
+				_player = (PacMan) entity;
+				_playerInput = new InputController(_player);
+			}
+		}
 		boolean isAutoMode = Boolean.parseBoolean(properties.getProperty("PacMan.isAuto"));
 		_player.setAutoMoves(properties.getProperty("PacMan.move"));
 		_player.setAuto(isAutoMode);
 
-		MapLoader.loadWithProperty(this, properties);
-
-		initializeActors(properties);
+		initializeGameStates(properties);
 
 		// Setup input controller
 		// Refuse input if in auto mode
@@ -87,42 +95,16 @@ public class Game extends GameGrid
 	 *
 	 * @param properties properties loaded
 	 */
-	private void initializeActors(Properties properties)
+	private void initializeGameStates(Properties properties)
 	{
-		// Creates simple monsters
-		Monster troll = new Troll();
-		Monster tx5 = new TX5();
-
 		//Setup simple random seeds
 		int seed = Integer.parseInt(properties.getProperty("seed"));
 		_player.setSeed(seed);
-		troll.setSeed(seed);
-		tx5.setSeed(seed);
 
 		// Setup simple slow down
 		_player.setSlowDown(SLOW_DOWN_FACTOR);
-		troll.setSlowDown(SLOW_DOWN_FACTOR);
-		tx5.setSlowDown(SLOW_DOWN_FACTOR);
-
-		// Define simple monsters locations
-		String[] trollLocations = properties.getProperty("Troll.location").split(",");
-		String[] tx5Locations = properties.getProperty("TX5.location").split(",");
-		String[] playerLocations = properties.getProperty("PacMan.location").split(",");
-		int tx5X = Integer.parseInt(tx5Locations[0]);
-		int tx5Y = Integer.parseInt(tx5Locations[1]);
-
-		int trollX = Integer.parseInt(trollLocations[0]);
-		int trollY = Integer.parseInt(trollLocations[1]);
-
-		int playerX = Integer.parseInt(playerLocations[0]);
-		int playerY = Integer.parseInt(playerLocations[1]);
-
-		addActor(troll, new Location(trollX, trollY), Location.NORTH);
-		addActor(tx5, new Location(tx5X, tx5Y), Location.NORTH);
-		addActor(_player, new Location(playerX, playerY));
 
 		// Freeze tx5 for 5 seconds
-		tx5.setStateForSeconds(MonsterStates.FROZEN, 5);
 	}
 
 	/**
@@ -171,7 +153,7 @@ public class Game extends GameGrid
 	 */
 	public List<Collidable> getAllCollidingsAt(Location atLocation)
 	{
-		return CollisionController.getAllCollidingsAt(atLocation, this);
+		return CollisionManager.getAllCollidingsAt(atLocation, this);
 	}
 
 	/**

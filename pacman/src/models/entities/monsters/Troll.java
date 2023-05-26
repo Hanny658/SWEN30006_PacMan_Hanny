@@ -8,6 +8,7 @@ package src.models.entities.monsters;
 
 import ch.aplu.jgamegrid.Location;
 import src.models.entities.Monster;
+import src.models.entities.Wall;
 
 
 public class Troll extends Monster
@@ -30,5 +31,13 @@ public class Troll extends Monster
 		super.randomMove(oldDirection);
 		this.addVisitedList(this.getLocation());
 		super.walkApproach();
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		Troll new_ins = new Troll();
+		new_ins.setSlowDown(3);
+		return new_ins;
 	}
 }

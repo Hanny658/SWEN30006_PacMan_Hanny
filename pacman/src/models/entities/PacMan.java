@@ -8,7 +8,7 @@ package src.models.entities;
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.Location;
 import src.Game;
-import src.controllers.CollisionController;
+import src.controllers.CollisionManager;
 import src.models.Collidable;
 import src.models.Consumable;
 import src.models.Entity;
@@ -53,7 +53,7 @@ public class PacMan extends Entity
 			moveInAutoMode();
 			// At every move, detect collision before reporting status
 			// so that collision detection is executed exactly once every move
-			CollisionController.detectCollision(this, this.gameGrid);
+			CollisionManager.detectCollision(this, this.gameGrid);
 		}
 
 		Game.getGame().reportPlayerStatus();
@@ -206,4 +206,7 @@ public class PacMan extends Entity
 		Actor explosion = new Actor(EXPLOSION_SPRITE);
 		Game.getGame().addActor(explosion, this.getLocation());
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException { return new PacMan(); }
 }

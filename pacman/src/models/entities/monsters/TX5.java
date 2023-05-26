@@ -9,6 +9,7 @@ package src.models.entities.monsters;
 import ch.aplu.jgamegrid.Location;
 import src.Game;
 import src.models.entities.Monster;
+import src.models.entities.Wall;
 
 public class TX5 extends Monster
 {
@@ -38,5 +39,13 @@ public class TX5 extends Monster
 		}
 		addVisitedList(this.getLocation());
 		super.walkApproach();
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		TX5 new_ins = new TX5();
+		new_ins.setSlowDown(3);
+		return new_ins;
 	}
 }

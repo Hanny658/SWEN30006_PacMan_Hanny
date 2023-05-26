@@ -14,4 +14,6 @@ public class Wall extends Entity
 	{
 		super(DEFAULT_SPRITE);
 	}
+	@Override
+	public Object clone() throws CloneNotSupportedException { return new Wall(); }
 }

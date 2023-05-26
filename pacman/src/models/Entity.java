@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Entity extends Actor implements Collidable
+public abstract class Entity extends Actor implements Collidable, Cloneable
 {
 	protected static final int STILL_SPEED = 0;
 	/**
@@ -176,5 +176,11 @@ public abstract class Entity extends Actor implements Collidable
 				}
 			}
 		}
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		throw new CloneNotSupportedException("Clone is not supported");
 	}
 }

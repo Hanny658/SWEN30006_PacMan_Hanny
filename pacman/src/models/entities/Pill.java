@@ -29,4 +29,7 @@ public class Pill extends Entity implements Collidable, Consumable
 		Game.getGame().changeNumPillsEaten(1);
 		this.hide();
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException { return new Pill(); }
 }

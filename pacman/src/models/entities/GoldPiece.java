@@ -4,13 +4,14 @@
 
 package src.models.entities;
 
+import ch.aplu.jgamegrid.Location;
 import src.Game;
 import src.controllers.LogController;
 import src.models.Collidable;
 import src.models.Consumable;
 import src.models.Entity;
 
-public class GoldPiece extends Entity implements Collidable, Consumable
+public class GoldPiece extends Entity implements Collidable, Consumable, Cloneable
 {
 	private static final String LOG_NAME = "gold";
 	private static final String DEFAULT_SPRITE = "sprites/gold.png";
@@ -32,4 +33,7 @@ public class GoldPiece extends Entity implements Collidable, Consumable
 		// Hide instead of remove for Orion to know where it was
 		this.hide();
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException { return new GoldPiece(); }
 }

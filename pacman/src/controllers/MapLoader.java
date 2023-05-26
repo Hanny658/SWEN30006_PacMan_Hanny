@@ -10,10 +10,14 @@ package src.controllers;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.util.Size;
+import src.io.GameMapXmlParser;
+import src.models.Entity;
+import src.models.MonsterStates;
 import src.models.entities.GoldPiece;
 import src.models.entities.IceCube;
 import src.models.entities.Pill;
 import src.models.entities.Wall;
+import src.models.entities.monsters.TX5;
 
 import java.awt.*;
 import java.io.FileInputStream;
@@ -178,6 +182,31 @@ public final class MapLoader
 		else
 		{
 			loadWithDefault(grid, 'x');
+		}
+	}
+
+	public static void loadFromXml(GameGrid grid, String xml)
+	{
+		// Clear the grid with path blocks
+		grid.getBg().clear(Color.lightGray);
+		GameMapXmlParser parser = new GameMapXmlParser();
+		try
+		{
+			for (var entry : parser.test1().entrySet())
+			{
+				Entity entity = entry.getKey();
+				Location location = entry.getValue();
+				grid.addActor(entity, location);
+				if (entity instanceof TX5)
+				{
+					entity.setDirection(Location.NORTH);
+					((TX5) entity).setStateForSeconds(MonsterStates.FROZEN, 5);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			// Who cares
 		}
 	}
 

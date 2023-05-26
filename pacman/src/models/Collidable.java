@@ -7,9 +7,10 @@
 package src.models;
 
 import ch.aplu.jgamegrid.Location;
+import src.controllers.CollisionManager;
 
 /**
- * @see src.controllers.CollisionController
+ * @see CollisionManager
  */
 public interface Collidable
 {

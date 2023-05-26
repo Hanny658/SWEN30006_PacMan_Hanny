@@ -27,4 +27,7 @@ public class IceCube extends Entity implements Collidable, Consumable
 		Game.getGame().setFrozen();
 		this.hide();
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException { return new IceCube(); }
 }
