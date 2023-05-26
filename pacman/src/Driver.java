@@ -25,19 +25,11 @@ public class Driver
 	 */
 	public static void main(String[] args)
 	{
-		boolean RUN_GAME = false;
+		boolean RUN_GAME = true;
 		boolean RUN_GAME_WITH_EDITOR = false;
 		boolean RUN_EDITOR = RUN_GAME_WITH_EDITOR == RUN_GAME;
 		if (RUN_EDITOR) Editor.run();
-		GameMapXmlParser parser = new GameMapXmlParser();
-		try
-		{
-			//parser.test1();
-		}
-		catch (Exception e)
-		{
-			// Who cares
-		}
+
 		if (!RUN_GAME)
 			return;
 		// Load property file from terminal argument, otherwise load default property

@@ -14,7 +14,7 @@ import src.controllers.CollisionManager;
  */
 public interface Collidable
 {
-	void collide(Collidable collidable);
+	void onCollide(Collidable collidable);
 
 	Location getCollidableLocation();
 }

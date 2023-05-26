@@ -81,7 +81,7 @@ public abstract class Entity extends Actor implements Collidable, Cloneable
 	}
 
 	@Override
-	public void collide(Collidable collidable)
+	public void onCollide(Collidable collidable)
 	{
 		// This is intended to be left empty so that Collidables which doesn't need to do anything
 		// when colliding do not need to Override collide()

@@ -146,7 +146,7 @@ public class PacMan extends Entity
 	}
 
 	@Override
-	public void collide(Collidable collidable)
+	public void onCollide(Collidable collidable)
 	{
 		if (collidable instanceof Consumable)
 		{

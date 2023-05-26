@@ -10,16 +10,10 @@ package src;
 
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
-import src.controllers.CollisionManager;
-import src.controllers.InputController;
-import src.controllers.LogController;
-import src.controllers.MapLoader;
+import src.controllers.*;
 import src.models.Collidable;
 import src.models.GameVersion;
-import src.models.entities.GoldPiece;
-import src.models.entities.Monster;
-import src.models.entities.PacMan;
-import src.models.entities.Pill;
+import src.models.entities.*;
 
 import java.util.List;
 import java.util.Properties;
@@ -58,6 +52,20 @@ public class Game extends GameGrid
 
 		//MapLoader.loadWithProperty(this, properties);
 		MapLoader.loadFromXml(this, "who cares");
+
+		for (var entity : this.getActors())
+		{
+			if (entity instanceof Portal)
+			{
+				for (var entity2 : this.getActors())
+				{
+					if (entity2 instanceof Portal)
+					{
+						PortalManager.registerPortals((Portal) entity, (Portal) entity2);
+					}
+				}
+			}
+		}
 
 		//Setup for auto test
 		for (var entity : this.getActors())
@@ -103,8 +111,6 @@ public class Game extends GameGrid
 
 		// Setup simple slow down
 		_player.setSlowDown(SLOW_DOWN_FACTOR);
-
-		// Freeze tx5 for 5 seconds
 	}
 
 	/**

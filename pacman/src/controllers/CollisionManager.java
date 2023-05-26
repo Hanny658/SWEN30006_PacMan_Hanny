@@ -68,8 +68,8 @@ public class CollisionManager
 		// The rest are the colliding objects
 		for (var collidable2 : collidables)
 		{
-			collidable.collide(collidable2);
-			collidable2.collide(collidable);
+			collidable.onCollide(collidable2);
+			collidable2.onCollide(collidable);
 		}
 	}
 }
