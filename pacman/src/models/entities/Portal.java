@@ -61,7 +61,7 @@ public class Portal extends Entity implements Collidable
 		White("White"),
 		Yellow("Yellow"),
 		DarkGold("DarkGold"),
-		DarkGray("DarkGray");gi
+		DarkGray("DarkGray");
 		private final String _value;
 
 		PortalColor(String name)
