@@ -18,6 +18,7 @@ import src.models.Collidable;
 import src.models.GameVersion;
 import src.models.entities.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,6 +39,7 @@ public class Game extends GameGrid
 	private static Game _instance = null;
 	private PacMan _player;
 	private InputManager _playerInput;
+	private PortalManager _portalManager;
 	private final GameVersion _gameVersion;
 	private int _score = 0;
 	private int _numPillsEaten = 0;
@@ -68,20 +70,13 @@ public class Game extends GameGrid
 			System.exit(1);
 			return;
 		}
-
+		_portalManager = new PortalManager();
+		List<Portal> portals = new ArrayList<>();
 		for (var entity : this.getActors())
-		{
 			if (entity instanceof Portal)
-			{
-				for (var entity2 : this.getActors())
-				{
-					if (entity2 instanceof Portal)
-					{
-						PortalManager.registerPortals((Portal) entity, (Portal) entity2);
-					}
-				}
-			}
-		}
+				portals.add((Portal) entity);
+
+		_portalManager.autoRegister(portals);
 
 		//Setup for auto test
 		for (var entity : this.getActors())

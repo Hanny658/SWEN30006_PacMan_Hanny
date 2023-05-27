@@ -4,17 +4,29 @@ import src.models.Entity;
 import src.models.entities.Portal;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PortalManager
 {
-	private static ArrayList<PortalPair> _portalRegistry = new ArrayList<>();
-	public static boolean isRegistered(Portal portal)
+	private ArrayList<PortalPair> _portalRegistry = new ArrayList<>();
+	public boolean isRegistered(Portal portal)
 	{
 		return getPairedPortal(portal) != null;
 	}
 
-	public static boolean registerPortals(Portal portal1, Portal portal2)
+	public boolean autoRegister(List<Portal> portals)
+	{
+		for (var portal1 : portals)
+			for (var portal2 : portals)
+				registerPortals(portal1, portal2);
+
+		if (_portalRegistry.size() * 2 == portals.size())
+			return true;
+		return false;
+	}
+
+	private boolean registerPortals(Portal portal1, Portal portal2)
 	{
 		// Must not register itself
 		if (portal1 == portal2)
@@ -25,16 +37,18 @@ public class PortalManager
 			return false;
 
 		// Portals must be in the same color
-		if (portal1.color != portal2.color)
+		if (portal1.getColor() != portal2.getColor())
 			return false;
 
 		PortalPair pair = new PortalPair();
 		pair.setPortals(portal1, portal2);
+		portal1.setManager(this);
+		portal2.setManager(this);
 		_portalRegistry.add(pair);
 		return true;
 	}
 
-	public static Portal getPairedPortal(Portal portal)
+	public Portal getPairedPortal(Portal portal)
 	{
 		for (var pair : _portalRegistry)
 		{
@@ -46,13 +60,13 @@ public class PortalManager
 		return null;
 	}
 
-	public static void teleport(Entity entity, Portal portal1)
+	public void teleport(Entity entity, Portal portal1)
 	{
 		Portal portal2 = getPairedPortal(portal1);
 		entity.setLocation(portal2.getLocation());
 	}
 
-	public static class PortalPair
+	public class PortalPair
 	{
 		private Portal _portal1, _portal2;
 		public void setPortals(Portal portal1, Portal portal2)

@@ -32,14 +32,14 @@ public class GameMapXmlParser
 		NAME_TO_ENTITY.put("PacTile", new PacMan());
 		NAME_TO_ENTITY.put("TrollTile", new Troll());
 		NAME_TO_ENTITY.put("TX5Tile", new TX5());
-		NAME_TO_ENTITY.put("PortalWhiteTile", new Portal(Portal.PortColor.White));
-		NAME_TO_ENTITY.put("PortalYellowTile", new Portal(Portal.PortColor.Yellow));
-		NAME_TO_ENTITY.put("PortalDarkGoldTile", new Portal(Portal.PortColor.DarkGold));
-		NAME_TO_ENTITY.put("PortalDarkGrayTile", new Portal(Portal.PortColor.DarkGray));
+		NAME_TO_ENTITY.put("PortalWhiteTile", new Portal(Portal.PortalColor.White));
+		NAME_TO_ENTITY.put("PortalYellowTile", new Portal(Portal.PortalColor.Yellow));
+		NAME_TO_ENTITY.put("PortalDarkGoldTile", new Portal(Portal.PortalColor.DarkGold));
+		NAME_TO_ENTITY.put("PortalDarkGrayTile", new Portal(Portal.PortalColor.DarkGray));
 	}
 
 	/** Load to a map of entities and their locations from XML */
-	public static Map<Entity, Location> loadEntityFromXml(String fileName)
+	public static Map<Location, Entity> loadEntityFromXml(String fileName)
 	{
 		try
 		{
@@ -57,9 +57,9 @@ public class GameMapXmlParser
 		return null;
 	}
 
-	private static Map<Entity, Location> getEntitiesAndLocations(GameMapSchema map)
+	private static Map<Location, Entity> getEntitiesAndLocations(GameMapSchema map)
 	{
-		Map<Entity, Location> entities = new HashMap<>();
+		Map<Location, Entity> entities = new HashMap<>();
 		try
 		{
 			int x = -1, y = -1;
@@ -71,7 +71,7 @@ public class GameMapXmlParser
 				{
 					x++;
 					if (!NAME_TO_ENTITY.containsKey(cell)) continue;
-					entities.put((Entity) NAME_TO_ENTITY.get(cell).clone(), new Location(x, y));
+					entities.put(new Location(x, y), (Entity) NAME_TO_ENTITY.get(cell).clone());
 				}
 			}
 		}

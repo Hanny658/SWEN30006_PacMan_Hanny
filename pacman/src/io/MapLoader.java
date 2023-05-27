@@ -197,8 +197,8 @@ public final class MapLoader
 		{
 			for (var entry : entities.entrySet())
 			{
-				Entity entity = entry.getKey();
-				Location location = entry.getValue();
+				var location = entry.getKey();
+				var entity = entry.getValue();
 				grid.addActor(entity, location);
 				if (entity instanceof TX5)
 				{

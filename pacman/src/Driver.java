@@ -37,7 +37,6 @@ public class Driver
 		// Logging is made available anywhere via a static wrapper
 		LogManager.setGameCallback(gameCallback);
 		Game.initGame(properties);
-		System.out.printf("Returned");
 	}
 }
 
