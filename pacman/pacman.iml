@@ -7,8 +7,19 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="jakarta.xml.bind.api" level="project" />
-    <orderEntry type="library" name="glassfish.jaxb.runtime" level="project" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="jakarta.xml.bind.api" level="project" />
+    <orderEntry type="library" exported="" name="glassfish.jaxb.runtime" level="project" />
+    <orderEntry type="library" exported="" name="JGameGrid" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -79,47 +79,4 @@ public class GameMapXmlParser
 		}
 		return entities;
 	}
-
-//	public GameMap test() throws IOException, JDOMException
-//	{
-//		SAXBuilder builder = new SAXBuilder();
-//		builder.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-//		builder.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-//
-//		Document xmlDocument = builder.build(new File("testamoffat"));
-//		Element root = xmlDocument.getRootElement();
-//
-//		Map<Entity, Location> entities = new HashMap<>();
-//
-//		root.getChildren(SIZE_NODE)
-//		for (var sizeObject : )
-//		{
-//			Element size = (Element) sizeObject;
-//			System.out.println(size.getName());
-//		}
-//		int x = 0, y = 0;
-//		for (var rowObject : root.getChildren(ROW_NODE))
-//		{
-//			x = 0;
-//			Element row = (Element) rowObject;
-//			for (var cellObject : row.getChildren(CELL_NODE))
-//			{
-//				Element cell = (Element) cellObject;
-//				try
-//				{
-//					Entity entity = (Entity) NAME_TO_ENTITY.get(cell.getValue()).clone();
-//					entities.put(entity, new Location(x, y));
-//				}
-//				catch (Exception e)
-//				{
-//					// Who cares
-//				}
-//				x++;
-//			}
-//			y++;
-//		}
-//		int width = 20;
-//		int height = 11;
-//		//return new GameMap(width, height, entities);
-//	}
 }
