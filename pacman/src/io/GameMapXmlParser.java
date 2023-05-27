@@ -5,6 +5,8 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import src.models.Entity;
 import src.models.GameMapSchema;
+import src.models.GameMapSchema.Size;
+import src.models.Pair;
 import src.models.entities.*;
 import src.models.entities.monsters.TX5;
 import src.models.entities.monsters.Troll;
@@ -20,7 +22,6 @@ public class GameMapXmlParser
 	private static final String ROW_NODE = "row";
 	private static final String CELL_NODE = "cell";
 	private static final Map<String, Entity> NAME_TO_ENTITY = new HashMap<>();
-	private static final String DEFAULT_MAP = "testamoffat";
 
 	static
 	{
@@ -39,7 +40,7 @@ public class GameMapXmlParser
 	}
 
 	/** Load to a map of entities and their locations from XML */
-	public static Map<Location, Entity> loadEntityFromXml(String fileName)
+	public static Pair<Map<Location, Entity>, Size> loadEntityFromXml(String fileName)
 	{
 		try
 		{
@@ -48,7 +49,7 @@ public class GameMapXmlParser
 			JAXBContext jaxbContext = JAXBContext.newInstance(GameMapSchema.class);
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			GameMapSchema map = (GameMapSchema) unmarshaller.unmarshal(xmlFile);
-			return getEntitiesAndLocations(map);
+			return new Pair<>(getEntitiesAndLocations(map), map.getSize()) ;
 		}
 		catch (Exception e)
 		{

@@ -187,8 +187,10 @@ public final class MapLoader
 
 	public static boolean loadFromXml(GameGrid grid, String filename)
 	{
-		var entities = GameMapXmlParser.loadEntityFromXml(filename);
-		var valid = LevelChecker.checkMap(entities, filename);
+		var result = GameMapXmlParser.loadEntityFromXml(filename);
+		var entities = result.item1();
+		var mapSize = result.item2();
+		var valid = LevelChecker.checkMap(entities, mapSize, filename);
 		if (!valid)
 			return false;
 		// Clear the grid with path blocks

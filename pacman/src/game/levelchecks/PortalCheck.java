@@ -1,7 +1,9 @@
 package src.game.levelchecks;
 
 import ch.aplu.jgamegrid.Location;
+import ch.aplu.util.Size;
 import src.models.Entity;
+import src.models.GameMapSchema;
 import src.models.entities.Portal;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ public class PortalCheck implements LevelCheck
 {
 	private static final String FAIL_MSG = "portal %s count is not 2";
 	@Override
-	public LevelCheckResult check(Map<Location, Entity> entities)
+	public LevelCheckResult check(Map<Location, Entity> entities, GameMapSchema.Size mapSize)
 	{
 		Map<Portal.PortalColor, List<Location>> portals = new HashMap<>();
 		List<LevelCheckResult.LevelCheckError> errors = new ArrayList<>();

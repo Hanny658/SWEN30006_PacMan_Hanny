@@ -2,6 +2,7 @@ package src.game.levelchecks;
 
 import ch.aplu.jgamegrid.Location;
 import src.models.Entity;
+import src.models.GameMapSchema;
 import src.models.entities.GoldPiece;
 import src.models.entities.Pill;
 
@@ -16,7 +17,7 @@ public class GPNumCheck implements LevelCheck
 	private static final String LACK_GP = String.format("less than %d Gold and Pill", LEAST_GP_NUM);
 
 	@Override
-	public LevelCheckResult check(Map<Location, Entity> entities)
+	public LevelCheckResult check(Map<Location, Entity> entities, GameMapSchema.Size mapSize)
 	{
 		int count = 0;
 		for (var entry : entities.entrySet())

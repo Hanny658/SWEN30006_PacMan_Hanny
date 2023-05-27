@@ -1,6 +1,7 @@
 package src.game;
 
 import src.models.Entity;
+import src.models.Pair;
 import src.models.entities.Portal;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class PortalManager
 {
-	private ArrayList<PortalPair> _portalRegistry = new ArrayList<>();
+	private ArrayList<Pair<Portal, Portal>> _portalRegistry = new ArrayList<>();
 	public boolean isRegistered(Portal portal)
 	{
 		return getPairedPortal(portal) != null;
@@ -40,8 +41,7 @@ public class PortalManager
 		if (portal1.getColor() != portal2.getColor())
 			return false;
 
-		PortalPair pair = new PortalPair();
-		pair.setPortals(portal1, portal2);
+		Pair<Portal, Portal> pair = new Pair<>(portal1, portal2);
 		portal1.setManager(this);
 		portal2.setManager(this);
 		_portalRegistry.add(pair);
@@ -52,10 +52,10 @@ public class PortalManager
 	{
 		for (var pair : _portalRegistry)
 		{
-			if (pair.getPortal1() == portal)
-				return pair.getPortal2();
-			else if (pair.getPortal2() == portal)
-				return pair.getPortal1();
+			if (pair.item1() == portal)
+				return pair.item2();
+			else if (pair.item2() == portal)
+				return pair.item1();
 		}
 		return null;
 	}
@@ -64,18 +64,5 @@ public class PortalManager
 	{
 		Portal portal2 = getPairedPortal(portal1);
 		entity.setLocation(portal2.getLocation());
-	}
-
-	public class PortalPair
-	{
-		private Portal _portal1, _portal2;
-		public void setPortals(Portal portal1, Portal portal2)
-		{
-			this._portal1 = portal1;
-			this._portal2 = portal2;
-		}
-
-		public Portal getPortal1() { return _portal1; }
-		public Portal getPortal2() { return _portal2; }
 	}
 }

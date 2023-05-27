@@ -4,6 +4,7 @@ import ch.aplu.jgamegrid.Location;
 import src.game.levelchecks.*;
 import src.io.LogManager;
 import src.models.Entity;
+import src.models.GameMapSchema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +20,12 @@ public class LevelChecker
         _checks.add(new PacManCheck());
         _checks.add(new PortalCheck());
         _checks.add(new GPNumCheck());
+        _checks.add(new GPAccessibilityCheck());
         // ...
     }
 
     /** Checks the map and print to the game logfile */
-    public static boolean checkMap(Map<Location, Entity> entities, String filename)
+    public static boolean checkMap(Map<Location, Entity> entities, GameMapSchema.Size mapSize, String filename)
     {
         boolean passed = true;
         boolean checkForGPAccessibility = true;
@@ -33,7 +35,7 @@ public class LevelChecker
             if (check instanceof GPAccessibilityCheck)
                 if (!checkForGPAccessibility) continue;
 
-            var result = check.check(entities);
+            var result = check.check(entities, mapSize);
             if (!result.success())
             {
                 // GPNumCheck won't affect GPAccessibilityCheck

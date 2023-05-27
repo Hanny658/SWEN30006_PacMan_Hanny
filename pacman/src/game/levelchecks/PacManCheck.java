@@ -1,7 +1,9 @@
 package src.game.levelchecks;
 
 import ch.aplu.jgamegrid.Location;
+import ch.aplu.util.Size;
 import src.models.Entity;
+import src.models.GameMapSchema;
 import src.models.entities.PacMan;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ public class PacManCheck implements LevelCheck
 	private static final String TOO_MANY_PACMAN = "more than one start for Pacman";
 
 	@Override
-	public LevelCheckResult check(Map<Location, Entity> entities)
+	public LevelCheckResult check(Map<Location, Entity> entities, GameMapSchema.Size mapSize)
 	{
 		List<Location> pacManLocations = new ArrayList<>();
 		for (var entry : entities.entrySet())
