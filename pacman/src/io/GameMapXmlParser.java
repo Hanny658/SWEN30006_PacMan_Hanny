@@ -4,7 +4,7 @@ import ch.aplu.jgamegrid.Location;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import src.models.Entity;
-import src.models.GameMap;
+import src.models.GameMapSchema;
 import src.models.entities.*;
 import src.models.entities.monsters.TX5;
 import src.models.entities.monsters.Troll;
@@ -39,15 +39,15 @@ public class GameMapXmlParser
 	}
 
 	/** Load to a map of entities and their locations from XML */
-	public Map<Entity, Location> loadMapFromXml(String fileName)
+	public static Map<Entity, Location> loadEntityFromXml(String fileName)
 	{
 		try
 		{
 			File xmlFile = new File(fileName);
 
-			JAXBContext jaxbContext = JAXBContext.newInstance(GameMap.class);
+			JAXBContext jaxbContext = JAXBContext.newInstance(GameMapSchema.class);
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			GameMap map = (GameMap) unmarshaller.unmarshal(xmlFile);
+			GameMapSchema map = (GameMapSchema) unmarshaller.unmarshal(xmlFile);
 			return getEntitiesAndLocations(map);
 		}
 		catch (Exception e)
@@ -57,7 +57,7 @@ public class GameMapXmlParser
 		return null;
 	}
 
-	private Map<Entity, Location> getEntitiesAndLocations(GameMap map)
+	private static Map<Entity, Location> getEntitiesAndLocations(GameMapSchema map)
 	{
 		Map<Entity, Location> entities = new HashMap<>();
 		try
@@ -80,11 +80,5 @@ public class GameMapXmlParser
 			e.printStackTrace();
 		}
 		return entities;
-	}
-
-	// Overloaded with default input
-	public Map<Entity, Location> loadMapFromXml()
-	{
-		return loadMapFromXml(DEFAULT_MAP);
 	}
 }

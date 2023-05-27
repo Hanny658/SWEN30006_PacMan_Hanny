@@ -197,7 +197,7 @@
     <cell>WallTile</cell>
     <cell>WallTile</cell>
     <cell>PathTile</cell>
-    <cell>PathTile</cell>
+    <cell>PacTile</cell>
     <cell>PillTile</cell>
     <cell>GoldTile</cell>
     <cell>IceTile</cell>
@@ -218,7 +218,7 @@
     <cell>WallTile</cell>
     <cell>PathTile</cell>
     <cell>PathTile</cell>
-    <cell>PacTile</cell>
+    <cell>PathTile</cell>
     <cell>PathTile</cell>
     <cell>PillTile</cell>
     <cell>GoldTile</cell>

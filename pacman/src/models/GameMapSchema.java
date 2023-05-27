@@ -1,15 +1,12 @@
 package src.models;
 
-import ch.aplu.jgamegrid.Location;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @XmlRootElement(name = "level")
-public class GameMap
+public class GameMapSchema
 {
 	private ArrayList<Row> _rows;
 

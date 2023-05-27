@@ -9,7 +9,6 @@ package src;
 import src.io.GameCallback;
 import src.io.LogManager;
 import src.io.MapLoader;
-import src.mapeditor.Editor;
 
 import java.util.Properties;
 
@@ -24,13 +23,6 @@ public class Driver
 	 */
 	public static void main(String[] args)
 	{
-		boolean RUN_GAME = true;
-		boolean RUN_GAME_WITH_EDITOR = false;
-		boolean RUN_EDITOR = RUN_GAME_WITH_EDITOR == RUN_GAME;
-		if (RUN_EDITOR) Editor.run();
-
-		if (!RUN_GAME)
-			return;
 		// Load property file from terminal argument, otherwise load default property
 		String propertiesPath = DEFAULT_PROPERTIES_PATH;
 		if (args.length > 0)
@@ -45,6 +37,7 @@ public class Driver
 		// Logging is made available anywhere via a static wrapper
 		LogManager.setGameCallback(gameCallback);
 		Game.initGame(properties);
+		System.out.printf("Returned");
 	}
 }
 

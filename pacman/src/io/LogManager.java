@@ -9,7 +9,6 @@
 
 package src.io;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -22,14 +21,14 @@ import java.io.IOException;
  */
 public class LogManager
 {
-	private static final String errorLogFile = "errorLog.txt";
-	private static FileWriter fileWriter = null;
+	private static final String ERR_LOG_FILE = "errorLog.txt";
+	private static FileWriter _errorLogWriter = null;
 
-	public LogManager()
+	static
 	{
 		try
 		{
-			fileWriter = new FileWriter(new File(errorLogFile));
+			_errorLogWriter = new FileWriter(ERR_LOG_FILE);
 		}
 		catch (IOException ex)
 		{
@@ -37,13 +36,16 @@ public class LogManager
 		}
 	}
 
-	private static void logError(String str)
+	public static void errorLog(String str)
 	{
 		try
 		{
-			fileWriter.write(str);
-			fileWriter.write("\n");
-			fileWriter.flush();
+			_errorLogWriter.write(str);
+
+			// TODO: DEBUG
+			System.err.println(str);
+			_errorLogWriter.write("\n");
+			_errorLogWriter.flush();
 		}
 		catch (IOException e)
 		{

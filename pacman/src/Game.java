@@ -43,6 +43,7 @@ public class Game extends GameGrid
 	private int _numPillsEaten = 0;
 	private boolean _gameStopped = false;
 	private boolean _win = false;
+	private Properties _properties;
 
 	private Game(Properties properties)
 	{
@@ -53,8 +54,20 @@ public class Game extends GameGrid
 
 		_gameVersion = GameVersion.getGameVersion(properties.getProperty("version"));
 
+		this._properties = properties;
 		//MapLoader.loadWithProperty(this, properties);
-		MapLoader.loadFromXml(this, "who cares");
+
+	}
+
+	private void startGame()
+	{
+		boolean mapValid = MapLoader.loadFromXml(this, "testamoffat.xml");
+		if (!mapValid)
+		{
+			System.err.println("Map invalid, Check error log for errors.");
+			System.exit(1);
+			return;
+		}
 
 		for (var entity : this.getActors())
 		{
@@ -73,18 +86,17 @@ public class Game extends GameGrid
 		//Setup for auto test
 		for (var entity : this.getActors())
 		{
-			System.out.println(entity.getClass().getSimpleName());
 			if (entity instanceof PacMan)
 			{
 				_player = (PacMan) entity;
 				_playerInput = new InputManager(_player);
 			}
 		}
-		boolean isAutoMode = Boolean.parseBoolean(properties.getProperty("PacMan.isAuto"));
-		_player.setAutoMoves(properties.getProperty("PacMan.move"));
+		boolean isAutoMode = Boolean.parseBoolean(_properties.getProperty("PacMan.isAuto"));
+		_player.setAutoMoves(_properties.getProperty("PacMan.move"));
 		_player.setAuto(isAutoMode);
 
-		initializeGameStates(properties);
+		initializeGameStates(_properties);
 
 		// Setup input controller
 		// Refuse input if in auto mode
@@ -127,6 +139,7 @@ public class Game extends GameGrid
 	public static void initGame(Properties properties)
 	{
 		_instance = new Game(properties);
+		_instance.startGame();
 	}
 
 	public static Game getGame()

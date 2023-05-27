@@ -10,7 +10,7 @@ package src.io;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.util.Size;
-import src.io.GameMapXmlParser;
+import src.game.LevelChecker;
 import src.models.Entity;
 import src.models.MonsterStates;
 import src.models.entities.GoldPiece;
@@ -185,14 +185,17 @@ public final class MapLoader
 		}
 	}
 
-	public static void loadFromXml(GameGrid grid, String xml)
+	public static boolean loadFromXml(GameGrid grid, String filename)
 	{
+		var entities = GameMapXmlParser.loadEntityFromXml(filename);
+		var valid = LevelChecker.checkMap(entities, filename);
+		if (!valid)
+			return false;
 		// Clear the grid with path blocks
 		grid.getBg().clear(Color.lightGray);
-		GameMapXmlParser parser = new GameMapXmlParser();
 		try
 		{
-			for (var entry : parser.loadMapFromXml().entrySet())
+			for (var entry : entities.entrySet())
 			{
 				Entity entity = entry.getKey();
 				Location location = entry.getValue();
@@ -208,6 +211,7 @@ public final class MapLoader
 		{
 			// Who cares
 		}
+		return true;
 	}
 
 	public static Properties loadPropertiesFile(String propertiesFile)
