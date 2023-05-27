@@ -8,7 +8,7 @@ package src.models.entities;
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.Location;
 import src.Game;
-import src.controllers.CollisionManager;
+import src.game.CollisionManager;
 import src.models.Collidable;
 import src.models.Consumable;
 import src.models.Entity;

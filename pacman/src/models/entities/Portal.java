@@ -1,10 +1,8 @@
 package src.models.entities;
 
-import src.controllers.PortalManager;
+import src.game.PortalManager;
 import src.models.Collidable;
 import src.models.Entity;
-
-import java.util.*;
 
 public class Portal extends Entity implements Collidable
 {

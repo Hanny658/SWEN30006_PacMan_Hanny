@@ -5,7 +5,7 @@
  * Provides more flexibility and extensibility.
  */
 
-package src.controllers;
+package src.io;
 
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
@@ -192,7 +192,7 @@ public final class MapLoader
 		GameMapXmlParser parser = new GameMapXmlParser();
 		try
 		{
-			for (var entry : parser.test1().entrySet())
+			for (var entry : parser.loadMapFromXml().entrySet())
 			{
 				Entity entity = entry.getKey();
 				Location location = entry.getValue();

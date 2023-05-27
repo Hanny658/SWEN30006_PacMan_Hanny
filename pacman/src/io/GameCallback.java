@@ -5,7 +5,7 @@
  * Behaviours are not changed.
  */
 
-package src.controllers;
+package src.io;
 
 import ch.aplu.jgamegrid.Location;
 import src.models.entities.Monster;

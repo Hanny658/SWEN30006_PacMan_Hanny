@@ -7,7 +7,7 @@
 package src.models;
 
 import ch.aplu.jgamegrid.Location;
-import src.controllers.CollisionManager;
+import src.game.CollisionManager;
 
 /**
  * @see CollisionManager

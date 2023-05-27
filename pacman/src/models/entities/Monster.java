@@ -7,8 +7,8 @@
 package src.models.entities;
 
 import ch.aplu.jgamegrid.Location;
-import src.controllers.CollisionManager;
-import src.controllers.LogController;
+import src.game.CollisionManager;
+import src.io.LogManager;
 import src.models.Collidable;
 import src.models.Entity;
 import src.models.MonsterStates;
@@ -106,7 +106,7 @@ public abstract class Monster extends Entity implements Collidable
 	protected void walkApproach()
 	{
 		// Report location change
-		LogController.getGameCallback().monsterLocationChanged(this);
+		LogManager.getGameCallback().monsterLocationChanged(this);
 	}
 
 	/** This function gets the state for current monster */

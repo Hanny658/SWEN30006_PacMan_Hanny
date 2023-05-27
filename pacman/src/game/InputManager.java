@@ -3,10 +3,10 @@
  * <p>
  * Take over the responsibility of handling user input from Game
  *
- * @see src.controllers.InputController
+ * @see src.game.InputManager
  */
 
-package src.controllers;
+package src.game;
 
 import ch.aplu.jgamegrid.GGKeyRepeatListener;
 import ch.aplu.jgamegrid.Location;
@@ -22,7 +22,7 @@ import java.util.Map;
  * Note this class is intended to not support any other command other than movement,
  * since PacMan should be an easy-to-play, simple game without needing to do any magic other than moving.
  */
-public class InputController implements GGKeyRepeatListener
+public class InputManager implements GGKeyRepeatListener
 {
 	/**
 	 * A static constant dictionary of mapping arrow key to direction
@@ -40,7 +40,7 @@ public class InputController implements GGKeyRepeatListener
 
 	private final Entity _entityToControl;
 
-	public InputController(Entity entityToControl)
+	public InputManager(Entity entityToControl)
 	{
 		this._entityToControl = entityToControl;
 	}

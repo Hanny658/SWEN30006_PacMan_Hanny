@@ -4,9 +4,8 @@
 
 package src.models.entities;
 
-import ch.aplu.jgamegrid.Location;
 import src.Game;
-import src.controllers.LogController;
+import src.io.LogManager;
 import src.models.Collidable;
 import src.models.Consumable;
 import src.models.Entity;
@@ -25,7 +24,7 @@ public class GoldPiece extends Entity implements Collidable, Consumable, Cloneab
 	@Override
 	public void consumed()
 	{
-		LogController.getGameCallback().pacManEatPillsAndItems(this.getLocation(), LOG_NAME);
+		LogManager.getGameCallback().pacManEatPillsAndItems(this.getLocation(), LOG_NAME);
 		Game.getGame().changeScore(GOLD_SCORE);
 		Game.getGame().changeNumPillsEaten(1);
 		Game.getGame().setFurious();

@@ -6,10 +6,9 @@
 
 package src;
 
-import src.controllers.GameCallback;
-import src.controllers.LogController;
-import src.controllers.MapLoader;
-import src.io.GameMapXmlParser;
+import src.io.GameCallback;
+import src.io.LogManager;
+import src.io.MapLoader;
 import src.mapeditor.Editor;
 
 import java.util.Properties;
@@ -44,7 +43,7 @@ public class Driver
 		GameCallback gameCallback = new GameCallback();
 
 		// Logging is made available anywhere via a static wrapper
-		LogController.setGameCallback(gameCallback);
+		LogManager.setGameCallback(gameCallback);
 		Game.initGame(properties);
 	}
 }

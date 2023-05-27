@@ -1,4 +1,4 @@
-package src.controllers;
+package src.game;
 
 import src.models.Entity;
 import src.models.entities.Portal;

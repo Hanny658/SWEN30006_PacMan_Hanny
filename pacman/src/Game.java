@@ -10,7 +10,10 @@ package src;
 
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
-import src.controllers.*;
+import src.game.*;
+import src.io.GameCallback;
+import src.io.LogManager;
+import src.io.MapLoader;
 import src.models.Collidable;
 import src.models.GameVersion;
 import src.models.entities.*;
@@ -34,7 +37,7 @@ public class Game extends GameGrid
 	private static final int SLOW_DOWN_FACTOR = 3;
 	private static Game _instance = null;
 	private PacMan _player;
-	private InputController _playerInput;
+	private InputManager _playerInput;
 	private final GameVersion _gameVersion;
 	private int _score = 0;
 	private int _numPillsEaten = 0;
@@ -74,7 +77,7 @@ public class Game extends GameGrid
 			if (entity instanceof PacMan)
 			{
 				_player = (PacMan) entity;
-				_playerInput = new InputController(_player);
+				_playerInput = new InputManager(_player);
 			}
 		}
 		boolean isAutoMode = Boolean.parseBoolean(properties.getProperty("PacMan.isAuto"));
@@ -165,19 +168,19 @@ public class Game extends GameGrid
 	/**
 	 * Declare the game result by setting the title and logging
 	 *
-	 * @see src.controllers.GameCallback
+	 * @see GameCallback
 	 */
 	private void declareGameResult()
 	{
 		if (_win)
 		{
 			this.setTitle(WIN_TITLE);
-			LogController.getGameCallback().endOfGame(WIN_TITLE);
+			LogManager.getGameCallback().endOfGame(WIN_TITLE);
 		}
 		else
 		{
 			this.setTitle(LOSE_TITLE);
-			LogController.getGameCallback().endOfGame(LOSE_TITLE);
+			LogManager.getGameCallback().endOfGame(LOSE_TITLE);
 		}
 	}
 
@@ -205,7 +208,7 @@ public class Game extends GameGrid
 	 * Record the number of pills eaten for logging usage. This includes pills and golds.
 	 *
 	 * @param byValue increase by
-	 * @see src.controllers.GameCallback
+	 * @see GameCallback
 	 */
 	public void changeNumPillsEaten(int byValue)
 	{
@@ -221,7 +224,7 @@ public class Game extends GameGrid
 	 * Gets the number of pills and golds eaten
 	 *
 	 * @return the number
-	 * @see src.controllers.GameCallback
+	 * @see GameCallback
 	 */
 	public int getNumPillsEaten()
 	{
@@ -246,7 +249,7 @@ public class Game extends GameGrid
 
 	public void reportPlayerStatus()
 	{
-		LogController.getGameCallback().pacManLocationChanged(
+		LogManager.getGameCallback().pacManLocationChanged(
 				getPlayer().getLocation(),
 				getScore(),
 				getNumPillsEaten());

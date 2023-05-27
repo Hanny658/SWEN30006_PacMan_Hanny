@@ -1,10 +1,10 @@
 /**
  * Created by Stephen Zhang & Hanny Zhang (Team 08)
  *
- * @see src.controllers.CollisionManager
+ * @see src.game.CollisionManager
  */
 
-package src.controllers;
+package src.game;
 
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;

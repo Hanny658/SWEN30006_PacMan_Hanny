@@ -5,7 +5,7 @@
 package src.models.entities;
 
 import src.Game;
-import src.controllers.LogController;
+import src.io.LogManager;
 import src.models.Collidable;
 import src.models.Consumable;
 import src.models.Entity;
@@ -24,7 +24,7 @@ public class Pill extends Entity implements Collidable, Consumable
 	@Override
 	public void consumed()
 	{
-		LogController.getGameCallback().pacManEatPillsAndItems(this.getLocation(), LOG_NAME);
+		LogManager.getGameCallback().pacManEatPillsAndItems(this.getLocation(), LOG_NAME);
 		Game.getGame().changeScore(PILL_SCORE);
 		Game.getGame().changeNumPillsEaten(1);
 		this.hide();

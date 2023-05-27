@@ -20,6 +20,7 @@ public class GameMapXmlParser
 	private static final String ROW_NODE = "row";
 	private static final String CELL_NODE = "cell";
 	private static final Map<String, Entity> NAME_TO_ENTITY = new HashMap<>();
+	private static final String DEFAULT_MAP = "testamoffat";
 
 	static
 	{
@@ -37,11 +38,12 @@ public class GameMapXmlParser
 		NAME_TO_ENTITY.put("PortalDarkGrayTile", new Portal(Portal.PortColor.DarkGray));
 	}
 
-	public Map<Entity, Location> test1()
+	/** Load to a map of entities and their locations from XML */
+	public Map<Entity, Location> loadMapFromXml(String fileName)
 	{
 		try
 		{
-			File xmlFile = new File("testamoffat");
+			File xmlFile = new File(fileName);
 
 			JAXBContext jaxbContext = JAXBContext.newInstance(GameMap.class);
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -78,5 +80,11 @@ public class GameMapXmlParser
 			e.printStackTrace();
 		}
 		return entities;
+	}
+
+	// Overloaded with default input
+	public Map<Entity, Location> loadMapFromXml()
+	{
+		return loadMapFromXml(DEFAULT_MAP);
 	}
 }
