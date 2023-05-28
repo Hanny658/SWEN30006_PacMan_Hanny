@@ -1,6 +1,6 @@
 package src;
 
-/** "Observe" Pattern for MENTALLY STRESSED error checking */
+/** "Observe" Pattern for EMOTIONAL DAMAGE error checking */
 public class Alistair
 {
 	private String lastName;

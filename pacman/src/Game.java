@@ -64,6 +64,13 @@ public class Game extends GameGrid
 
 	private void startGame()
 	{
+		var gameMaps = GameChecker.checkGameFolder();
+		if (gameMaps == null)
+		{
+			Alistair.observeAll("Game folder invalid.");
+			System.exit(1);
+			return;
+		}
 		boolean mapValid = MapLoader.loadFromXml(this, "test/testamoffat.xml");
 		if (!mapValid)
 		{

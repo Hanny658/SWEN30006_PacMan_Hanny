@@ -13,10 +13,7 @@ import ch.aplu.util.Size;
 import src.game.LevelChecker;
 import src.models.Entity;
 import src.models.MonsterStates;
-import src.models.entities.GoldPiece;
-import src.models.entities.IceCube;
-import src.models.entities.Pill;
-import src.models.entities.Wall;
+import src.models.entities.*;
 import src.models.entities.monsters.TX5;
 
 import java.awt.*;
@@ -213,6 +210,7 @@ public final class MapLoader
 		{
 			// Who cares
 		}
+		grid.setPaintOrder(PacMan.class);
 		return true;
 	}
 

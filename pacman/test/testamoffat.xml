@@ -62,9 +62,9 @@
     <cell>WallTile</cell>
     <cell>PathTile</cell>
     <cell>PathTile</cell>
+    <cell>TrollTile</cell>
     <cell>PathTile</cell>
-    <cell>PathTile</cell>
-    <cell>PathTile</cell>
+    <cell>TX5Tile</cell>
     <cell>PathTile</cell>
     <cell>WallTile</cell>
     <cell>WallTile</cell>
@@ -129,7 +129,7 @@
     <cell>WallTile</cell>
     <cell>PathTile</cell>
     <cell>WallTile</cell>
-    <cell>TX5Tile</cell>
+    <cell>PathTile</cell>
     <cell>WallTile</cell>
     <cell>PathTile</cell>
     <cell>WallTile</cell>
@@ -210,7 +210,7 @@
     <cell>PathTile</cell>
     <cell>PathTile</cell>
     <cell>WallTile</cell>
-    <cell>TrollTile</cell>
+    <cell>PathTile</cell>
     <cell>WallTile</cell>
     <cell>PathTile</cell>
     <cell>PathTile</cell>

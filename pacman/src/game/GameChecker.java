@@ -2,10 +2,16 @@ package src.game;
 
 import src.Alistair;
 import src.io.LogManager;
+import src.models.Pair;
 
 import java.io.File;
 import java.util.*;
 
+/**
+ * Class responsible for check for Game folder integrity
+ * a. at least one correctly named map file in the folder
+ * b. the sequence of map files well-defined (only one map named with a particular number)
+ */
 public class GameChecker
 {
     private static final String DEFAULT_GAME_FOLDER = "test";
@@ -14,7 +20,7 @@ public class GameChecker
 
     /** Check the validity of a GameMap Folder and returns null if any check(s) failed.
      *  return a sorted LinkedHashMap that keep entry in order for the game level */
-    public LinkedHashMap<Integer, String> checkGameFolder(String gameFolder)
+    public static LinkedHashMap<Integer, String> checkGameFolder(String gameFolder)
     {
         File folder = new File(gameFolder);
         File[] files = folder.listFiles();
@@ -26,79 +32,72 @@ public class GameChecker
             return null;
         }
 
-        Map<Integer, String> mappedIndex = new HashMap<>();
-        Set<Integer> occupiedNumbers = new HashSet<>();
-        ArrayList<String> conflictedFiles = new ArrayList<>();
+        List<Pair<Integer, String>> allGameMaps = new ArrayList<>();
+        Arrays.asList(files).forEach(file ->
+        {
+            var index = extractMapNumber(file.getName());
+            if (index != null)
+                allGameMaps.add(new Pair<>(index, file.getName()));
+        });
 
-        // Now check through the files in folder
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(".xml"))
-            {
-                String fileName = file.getName();
-                Integer mapNumber = extractMapNumber(fileName);
+        Map<Integer, String> validGameMaps = new HashMap<>();
+        ArrayList<Integer> conflictedIndicies = new ArrayList<>();
+        allGameMaps.forEach(pair ->
+        {
+            var index = pair.item1();
+            var filename = pair.item2();
+            if (validGameMaps.containsKey(index))
+                conflictedIndicies.add(index);
+            else
+                validGameMaps.put(index, filename);
+        });
 
-                // Check if the file name starts with a number and ends with ".xml"
-                if (mapNumber != null)
-                {
-                    // Check if there is a duplicate map number
-                    if (occupiedNumbers.contains(mapNumber))
-                    {
-                        Alistair.observeAll(String.format("[found DupNum=%d]", mapNumber));
-                        conflictedFiles.add(fileName);
-                    }
-                    else
-                    {
-                        Alistair.observeAll(String.format("[found DupNum=%d]", mapNumber));
-                        occupiedNumbers.add(mapNumber);
-                        mappedIndex.put(mapNumber, String.format("%s/%s", gameFolder, fileName));
-                    }
-                }
-            }
-        }
-        // Check if there are no maps in the folder
-        if (occupiedNumbers.isEmpty())
+        if (validGameMaps.isEmpty())
         {
             LogManager.errorLog(String.format("%s - %s", gameFolder, NO_MAPS));
             return null;
         }
+
         // Check if there are multiple maps with the same number
-        if (!conflictedFiles.isEmpty())
+        if (!conflictedIndicies.isEmpty())
         {
+            List<String> conflictedFiles = new ArrayList<>();
+            conflictedIndicies.forEach(conflictedIndex ->
+                    allGameMaps.forEach(pair ->
+                    {
+                        var index = pair.item1();
+                        var filename = pair.item2();
+                        if (index == conflictedIndex)
+                            conflictedFiles.add(filename);
+                    }));
             String errorFiles = String.join("; ", conflictedFiles);
             LogManager.errorLog(String.format("%s - %s: %s", gameFolder, CONFLICT_MAPS, errorFiles));
             return null;
         }
-        return sortGameMap(mappedIndex);
+
+        return sortGameMap(validGameMaps);
     }
 
     /** Extract the number of given xml filename */
-    private Integer extractMapNumber(String fileName)
+    private static Integer extractMapNumber(String fileName)
     {
-        String[] parts = fileName.split("\\.");
-        String fileExtension = parts[parts.length - 1];
+        // Check if file ends with .xml
+        if (!fileName.endsWith(".xml"))
+            return null;
 
-        // Only check for xml files
-        if (fileExtension.equals("xml"))
-        {
-            String[] nameParts = fileName.split("\\.");
-            String mapName = nameParts[0];
-
-            // Check if the map name starts with a number
-            if (mapName.matches("^\\d+.*"))
-            {
-                return Integer.parseInt(mapName.replaceAll("\\D+", ""));
-            }
-        }
-        // if fileName not meet required pattern
-        return null;
+        // Check if the map name starts with a number
+        var split = fileName.split("[^0-9]");
+        if (split.length == 0 || split[0].isEmpty()) return null;
+        return Integer.parseInt(split[0]);
     }
 
     /** Overload for default game folder */
-    public LinkedHashMap<Integer, String> checkGameFolder()
+    public static LinkedHashMap<Integer, String> checkGameFolder()
     { return checkGameFolder(DEFAULT_GAME_FOLDER); }
 
 
-    private LinkedHashMap<Integer, String> sortGameMap(Map<Integer, String> map) {
+    private static LinkedHashMap<Integer, String> sortGameMap(Map<Integer, String> map)
+    {
         // Convert the map entries to a list
         List<Map.Entry<Integer, String>> entryList = new ArrayList<>(map.entrySet());
 
@@ -109,9 +108,9 @@ public class GameChecker
         LinkedHashMap<Integer, String> sortedMap = new LinkedHashMap<>();
 
         // Copy the sorted entries to the LinkedHashMap
-        for (Map.Entry<Integer, String> entry : entryList) {
+        for (Map.Entry<Integer, String> entry : entryList)
             sortedMap.put(entry.getKey(), entry.getValue());
-        }
+
         return sortedMap;
     }
 }
