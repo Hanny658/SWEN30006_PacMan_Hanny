@@ -3,7 +3,12 @@ package src;
 public class Alistair
 {
 	private String lastName;
-	public Alistair(String lastName){ this.lastName = lastName; }
+	public Alistair(String lastName)
+	{
+		// Moffat! And only Moffat!
+		assert lastName.equals("Moffat");
+		this.lastName = lastName;
+	}
 
 	public void observe()
 	{
