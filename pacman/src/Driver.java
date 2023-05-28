@@ -1,7 +1,5 @@
 /**
  * Modified by Stephen Zhang & Hanny Zhang (Team 08)
- * <p>
- * Code page documented and modified for the use of LogController
  */
 
 package src;
@@ -9,12 +7,18 @@ package src;
 import src.io.GameCallback;
 import src.io.LogManager;
 import src.io.MapLoader;
+import src.mapeditor.Editor;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class Driver
 {
 	public static final String DEFAULT_PROPERTIES_PATH = "test.properties";
+	private static final String DEFAULT_GAME_FOLDER = "test";
+
 
 	/**
 	 * Starting point
@@ -23,20 +27,47 @@ public class Driver
 	 */
 	public static void main(String[] args)
 	{
+		if (args.length == 0)
+		{
+			Editor.run();
+
+			return;
+		}
+		Editor.run();
+		boolean testMode = false;
+		String gameFolder = DEFAULT_GAME_FOLDER;
 		// Load property file from terminal argument, otherwise load default property
-		String propertiesPath = DEFAULT_PROPERTIES_PATH;
 		if (args.length > 0)
-			propertiesPath = args[0];
+		{
+			Path path = Paths.get(args[0]);
 
-		final Properties properties = MapLoader.loadPropertiesFile(propertiesPath);
+			if (Files.isDirectory(path))
+			{
+				// Folder: test mode (start game with folder)
+				testMode = true;
+				final Properties properties = MapLoader.loadPropertiesFile(DEFAULT_PROPERTIES_PATH);
 
-		// GameCallback is barely touched
-		// Minimal modification is intended even though there might be better implementation
-		GameCallback gameCallback = new GameCallback();
+				// GameCallback is barely touched
+				// Minimal modification is intended even though there might be better implementation
+				GameCallback gameCallback = new GameCallback();
 
-		// Logging is made available anywhere via a static wrapper
-		LogManager.setGameCallback(gameCallback);
-		Game.initGame(properties);
+				// Logging is made available anywhere via a static wrapper
+				LogManager.setGameCallback(gameCallback);
+				Game.initGame(properties);
+				System.out.println("Game is running");
+			}
+			else if (Files.isRegularFile(path))
+			{
+				// File: start editor to edit this file
+			}
+			else
+			{
+
+			}
+			// Start editor with no file
+			gameFolder = args[0];
+		}
+		System.out.println("Main thread has returned.");
 	}
 }
 

@@ -65,7 +65,7 @@ public class LevelChecker
         }
         // TODO: DEBUG
         if (passed)
-            System.out.printf("Level check passed.");
+            System.err.printf("Level check passed.");
         return passed;
     }
 }

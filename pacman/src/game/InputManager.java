@@ -10,6 +10,7 @@ package src.game;
 
 import ch.aplu.jgamegrid.GGKeyRepeatListener;
 import ch.aplu.jgamegrid.Location;
+import src.Game;
 import src.models.Entity;
 
 import java.awt.event.KeyEvent;
@@ -39,10 +40,12 @@ public class InputManager implements GGKeyRepeatListener
 	}
 
 	private final Entity _entityToControl;
+	private final Game _game;
 
-	public InputManager(Entity entityToControl)
+	public InputManager(Game game, Entity entityToControl)
 	{
 		this._entityToControl = entityToControl;
+		this._game = game;
 	}
 
 	/**
@@ -53,6 +56,9 @@ public class InputManager implements GGKeyRepeatListener
 	@Override
 	public void keyRepeated(int keyCode)
 	{
+		if (keyCode == KeyEvent.VK_ESCAPE)
+			_game.returnToEditor();
+
 		// Check if the pressed key is registered with a direction to move
 		if (!KEY_TO_DIRECTION.containsKey(keyCode))
 			return; // Fail fast

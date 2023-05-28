@@ -86,7 +86,7 @@ public class GameChecker
             return null;
 
         // Check if the map name starts with a number
-        var split = fileName.split("[^0-9]");
+        var split = fileName.split("[^-?0-9]");
         if (split.length == 0 || split[0].isEmpty()) return null;
         return Integer.parseInt(split[0]);
     }

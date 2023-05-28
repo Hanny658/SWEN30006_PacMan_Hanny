@@ -94,10 +94,6 @@ public class GPAccessibilityCheck implements LevelCheck
 				{
 					// Find the destination location and mark it as accessible
 					Location destination = tpPointOf(theMap, (Portal) entity, current);
-					System.err.println(String.format("Teleported from %d,%d to %d,%d", current.x, current.y, destination.x, destination.y));
-
-					Alistair moffat = new Alistair("Moffat");
-					moffat.observe();
 
 					accessibleArea.add(destination);
 

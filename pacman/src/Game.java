@@ -14,6 +14,7 @@ import src.game.*;
 import src.io.GameCallback;
 import src.io.LogManager;
 import src.io.MapLoader;
+import src.mapeditor.Editor;
 import src.models.Collidable;
 import src.models.GameVersion;
 import src.models.entities.*;
@@ -24,7 +25,6 @@ import java.util.Properties;
 
 public class Game extends GameGrid
 {
-	private static final String DEFAULT_GAME_FOLDER = "test";
 	private static final String GAME_TITLE = "[PacMan in the TorusVerse]";
 	private static final String SCORE_TITLE = "%s Current score: %d";
 	private static final String WIN_TITLE = "YOU WIN";
@@ -67,10 +67,13 @@ public class Game extends GameGrid
 		var gameMaps = GameChecker.checkGameFolder();
 		if (gameMaps == null)
 		{
-			Alistair.observeAll("Game folder invalid.");
+			System.err.println("Game check failed.");
 			System.exit(1);
 			return;
 		}
+		System.err.println("Game check passed.");
+		gameMaps.entrySet().forEach(entry -> System.err.printf("Valid map: %d: %s\n", entry.getKey(), entry.getValue()));
+
 		boolean mapValid = MapLoader.loadFromXml(this, "test/testamoffat.xml");
 		if (!mapValid)
 		{
@@ -92,7 +95,7 @@ public class Game extends GameGrid
 			if (entity instanceof PacMan)
 			{
 				_player = (PacMan) entity;
-				_playerInput = new InputManager(_player);
+				_playerInput = new InputManager(this, _player);
 			}
 		}
 		boolean isAutoMode = Boolean.parseBoolean(_properties.getProperty("PacMan.isAuto"));
@@ -141,8 +144,15 @@ public class Game extends GameGrid
 	 */
 	public static void initGame(Properties properties)
 	{
+		Editor.run();
+
 		_instance = new Game(properties);
 		_instance.startGame();
+		while (_instance.isRunning())
+		{
+			// Busy waiting
+			System.out.println("WAITING");
+		}
 	}
 
 	public static Game getGame()
@@ -256,6 +266,15 @@ public class Game extends GameGrid
 	{
 		this._gameStopped = true;
 		this._win = isWin;
+	}
+
+	public void returnToEditor()
+	{
+		this._gameStopped = true;
+		doPause();
+
+		this.stopGameThread();
+		//Editor.run();
 	}
 
 	public PacMan getPlayer()
