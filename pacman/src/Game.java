@@ -24,7 +24,8 @@ import java.util.Properties;
 
 public class Game extends GameGrid
 {
-	private static final String GAME_TITLE = "[PacMan in the Multiverse]";
+	private static final String GAME_FOLDER = "test";
+	private static final String GAME_TITLE = "[PacMan in the TorusVerse]";
 	private static final String SCORE_TITLE = "%s Current score: %d";
 	private static final String WIN_TITLE = "YOU WIN";
 	private static final String LOSE_TITLE = "GAME OVER";
@@ -63,7 +64,7 @@ public class Game extends GameGrid
 
 	private void startGame()
 	{
-		boolean mapValid = MapLoader.loadFromXml(this, "testamoffat.xml");
+		boolean mapValid = MapLoader.loadFromXml(this, "test/testamoffat.xml");
 		if (!mapValid)
 		{
 			System.err.println("Map invalid, Check error log for errors.");
@@ -292,6 +293,11 @@ public class Game extends GameGrid
 		for (var actor : getActors())
 			if (actor instanceof Monster)
 				((Monster) actor).setFurious();
+	}
+
+	/** Keep going to next level */
+	public void nextLevel(){
+		//TODO
 	}
 }
 

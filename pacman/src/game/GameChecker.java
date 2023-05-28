@@ -50,7 +50,7 @@ public class GameChecker
                     {
                         Alistair.observeAll(String.format("[found DupNum=%d]", mapNumber));
                         occupiedNumbers.add(mapNumber);
-                        mappedIndex.put(mapNumber, fileName);
+                        mappedIndex.put(mapNumber, String.format("%s/%s", gameFolder, fileName));
                     }
                 }
             }

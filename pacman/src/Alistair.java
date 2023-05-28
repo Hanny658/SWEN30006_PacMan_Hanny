@@ -1,5 +1,6 @@
 package src;
 
+/** "Observe" Pattern for MENTALLY STRESSED error checking */
 public class Alistair
 {
 	private String lastName;
