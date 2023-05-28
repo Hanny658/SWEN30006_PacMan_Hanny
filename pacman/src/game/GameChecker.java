@@ -12,16 +12,23 @@ public class GameChecker
     private static final String NO_MAPS = "no maps found";
     private static final String CONFLICT_MAPS = "multiple maps at same level";
 
-    public boolean checkGameFolder(String gameFolder)
+    /** Check the validity of a GameMap Folder and returns null if any check(s) failed.
+     *  return a sorted LinkedHashMap that keep entry in order for the game level */
+    public LinkedHashMap<Integer, String> checkGameFolder(String gameFolder)
     {
         File folder = new File(gameFolder);
         File[] files = folder.listFiles();
 
-        // Check if there are no maps in the folder
-        if (files == null || files.length == 0) { return false; }
+        // Check if there are no files in the folder
+        if (files == null || files.length == 0)
+        {
+            LogManager.errorLog(String.format("%s - %s", gameFolder, NO_MAPS));
+            return null;
+        }
 
+        Map<Integer, String> mappedIndex = new HashMap<>();
         Set<Integer> occupiedNumbers = new HashSet<>();
-        Set<String> conflictedFiles = new HashSet<>();
+        ArrayList<String> conflictedFiles = new ArrayList<>();
 
         // Now check through the files in folder
         for (File file : files) {
@@ -43,6 +50,7 @@ public class GameChecker
                     {
                         Alistair.observeAll(String.format("[found DupNum=%d]", mapNumber));
                         occupiedNumbers.add(mapNumber);
+                        mappedIndex.put(mapNumber, fileName);
                     }
                 }
             }
@@ -51,16 +59,16 @@ public class GameChecker
         if (occupiedNumbers.isEmpty())
         {
             LogManager.errorLog(String.format("%s - %s", gameFolder, NO_MAPS));
-            return false;
+            return null;
         }
         // Check if there are multiple maps with the same number
         if (!conflictedFiles.isEmpty())
         {
             String errorFiles = String.join("; ", conflictedFiles);
             LogManager.errorLog(String.format("%s - %s: %s", gameFolder, CONFLICT_MAPS, errorFiles));
-            return false;
+            return null;
         }
-        return true;
+        return sortGameMap(mappedIndex);
     }
 
     /** Extract the number of given xml filename */
@@ -86,6 +94,24 @@ public class GameChecker
     }
 
     /** Overload for default game folder */
-    public boolean checkGameFolder()
+    public LinkedHashMap<Integer, String> checkGameFolder()
     { return checkGameFolder(DEFAULT_GAME_FOLDER); }
+
+
+    private LinkedHashMap<Integer, String> sortGameMap(Map<Integer, String> map) {
+        // Convert the map entries to a list
+        List<Map.Entry<Integer, String>> entryList = new ArrayList<>(map.entrySet());
+
+        // Sort the entries
+        entryList.sort(Map.Entry.comparingByKey());
+
+        // Create a new 'ordered' map to store the sorted entries
+        LinkedHashMap<Integer, String> sortedMap = new LinkedHashMap<>();
+
+        // Copy the sorted entries to the LinkedHashMap
+        for (Map.Entry<Integer, String> entry : entryList) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedMap;
+    }
 }
