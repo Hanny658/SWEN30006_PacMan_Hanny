@@ -17,6 +17,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import src.Driver;
 import src.mapeditor.grid.Camera;
 import src.mapeditor.grid.Grid;
 import src.mapeditor.grid.GridCamera;
@@ -96,6 +97,9 @@ public class Controller implements ActionListener, GUIInformation {
 			loadFile();
 		} else if (e.getActionCommand().equals("update")) {
 			updateGrid(gridWith, gridHeight);
+		} else if (e.getActionCommand().equals("test")) {
+			this.view.close();
+			Driver.RunGame();
 		}
 	}
 

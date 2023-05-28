@@ -84,6 +84,10 @@ public class View {
 		loadButton.addActionListener(controller);
 		loadButton.setActionCommand("load");
 
+		JButton testButton = new JButton("Test Map");
+		testButton.addActionListener(controller);
+		testButton.setActionCommand("test");
+
 		JPanel right = new JPanel();
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		Border border = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -91,6 +95,7 @@ public class View {
 		// right.add(showGridButton);
 		right.add(saveButton);
 		right.add(loadButton);
+		right.add(testButton);
 
 		/** The top panel, that shows coordinates and stuff. */
 		CameraInformationLabel cameraInformationLabel = new CameraInformationLabel(

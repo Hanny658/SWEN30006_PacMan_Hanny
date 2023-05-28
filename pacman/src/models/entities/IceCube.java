@@ -24,7 +24,6 @@ public class IceCube extends Entity implements Collidable, Consumable
 	public void consumed()
 	{
 		LogManager.getGameCallback().pacManEatPillsAndItems(this.getLocation(), LOG_NAME);
-		Game.getGame().setFrozen();
 		this.hide();
 	}
 

@@ -27,7 +27,6 @@ public class GoldPiece extends Entity implements Collidable, Consumable, Cloneab
 		LogManager.getGameCallback().pacManEatPillsAndItems(this.getLocation(), LOG_NAME);
 		Game.getGame().changeScore(GOLD_SCORE);
 		Game.getGame().changeNumPillsEaten(1);
-		Game.getGame().setFurious();
 
 		// Hide instead of remove for Orion to know where it was
 		this.hide();

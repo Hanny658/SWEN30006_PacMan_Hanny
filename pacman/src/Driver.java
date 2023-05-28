@@ -16,7 +16,6 @@ import java.util.Properties;
 
 public class Driver
 {
-	public static final String DEFAULT_PROPERTIES_PATH = "test.properties";
 	private static final String DEFAULT_GAME_FOLDER = "test";
 
 
@@ -33,7 +32,7 @@ public class Driver
 
 			return;
 		}
-		Editor.run();
+		//Editor.run();
 		boolean testMode = false;
 		String gameFolder = DEFAULT_GAME_FOLDER;
 		// Load property file from terminal argument, otherwise load default property
@@ -45,16 +44,8 @@ public class Driver
 			{
 				// Folder: test mode (start game with folder)
 				testMode = true;
-				final Properties properties = MapLoader.loadPropertiesFile(DEFAULT_PROPERTIES_PATH);
+				RunGame();
 
-				// GameCallback is barely touched
-				// Minimal modification is intended even though there might be better implementation
-				GameCallback gameCallback = new GameCallback();
-
-				// Logging is made available anywhere via a static wrapper
-				LogManager.setGameCallback(gameCallback);
-				Game.initGame(properties);
-				System.out.println("Game is running");
 			}
 			else if (Files.isRegularFile(path))
 			{
@@ -67,7 +58,24 @@ public class Driver
 			// Start editor with no file
 			gameFolder = args[0];
 		}
-		System.out.println("Main thread has returned.");
+	}
+
+	public static void RunEditor()
+	{
+		Editor.run();
+	}
+	public static void RunGame()
+	{
+		// GameCallback is barely touched
+		// Minimal modification is intended even though there might be better implementation
+		GameCallback gameCallback = new GameCallback();
+
+		// Logging is made available anywhere via a static wrapper
+		LogManager.setGameCallback(gameCallback);
+		Game.newGame();
+		var game = Game.getGame();
+		game.initGame();
+		game.startGame();
 	}
 }
 

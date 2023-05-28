@@ -33,11 +33,6 @@ public class PacMan extends Entity
 		super(true, DEFAULT_SPRITE, NUM_SPRITES);
 	}
 
-	public void setAuto(boolean isAuto)
-	{
-		this._autoMode = isAuto;
-	}
-
 	public void setAutoMoves(String autoMoveString)
 	{
 		if (autoMoveString != null)

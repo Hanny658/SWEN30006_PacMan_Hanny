@@ -14,9 +14,7 @@ import src.game.*;
 import src.io.GameCallback;
 import src.io.LogManager;
 import src.io.MapLoader;
-import src.mapeditor.Editor;
 import src.models.Collidable;
-import src.models.GameVersion;
 import src.models.entities.*;
 
 import java.util.ArrayList;
@@ -25,6 +23,7 @@ import java.util.Properties;
 
 public class Game extends GameGrid
 {
+	private static final String DEFAULT_PROPERTIES_PATH = "test.properties";
 	private static final String GAME_TITLE = "[PacMan in the TorusVerse]";
 	private static final String SCORE_TITLE = "%s Current score: %d";
 	private static final String WIN_TITLE = "YOU WIN";
@@ -41,29 +40,36 @@ public class Game extends GameGrid
 	private PacMan _player;
 	private InputManager _playerInput;
 	private PortalManager _portalManager;
-	private final GameVersion _gameVersion;
 	private int _score = 0;
 	private int _numPillsEaten = 0;
 	private boolean _gameStopped = false;
 	private boolean _win = false;
-	private Properties _properties;
+	private boolean _autoMode = false;
+	
 
-	private Game(Properties properties)
+	private Game()
 	{
-		//Setup game
 		super(NUM_CELLS_X, NUM_CELLS_Y, CELL_SIZE, ENGINE_DEBUG_MODE);
-		setSimulationPeriod(SIMULATION_PERIOD);
-		setTitle(GAME_TITLE);
-
-		_gameVersion = GameVersion.getGameVersion(properties.getProperty("version"));
-
-		this._properties = properties;
-		//MapLoader.loadWithProperty(this, properties);
-
 	}
 
-	private void startGame()
+	public static void newGame()
 	{
+		if (_instance != null)
+		{
+			_instance.getFrame().dispose();
+			_instance = null;
+		}
+		getGame();
+	}
+
+	/**
+	 * Initialise a game (reload map and properties)
+	 */
+	public void initGame()
+	{
+		//Setup game
+		setSimulationPeriod(SIMULATION_PERIOD);
+		setTitle(GAME_TITLE);
 		var gameMaps = GameChecker.checkGameFolder();
 		if (gameMaps == null)
 		{
@@ -81,6 +87,7 @@ public class Game extends GameGrid
 			System.exit(1);
 			return;
 		}
+
 		_portalManager = new PortalManager();
 		List<Portal> portals = new ArrayList<>();
 		for (var entity : this.getActors())
@@ -98,22 +105,32 @@ public class Game extends GameGrid
 				_playerInput = new InputManager(this, _player);
 			}
 		}
-		boolean isAutoMode = Boolean.parseBoolean(_properties.getProperty("PacMan.isAuto"));
-		_player.setAutoMoves(_properties.getProperty("PacMan.move"));
-		_player.setAuto(isAutoMode);
 
-		initializeGameStates(_properties);
+		// Setup simple slow down
+		_player.setSlowDown(SLOW_DOWN_FACTOR);
+
+		loadProperties(DEFAULT_PROPERTIES_PATH);
+
 
 		// Setup input controller
 		// Refuse input if in auto mode
-		if (!isAutoMode)
+		if (!_autoMode)
 		{
 			addKeyRepeatListener(_playerInput);
 			setKeyRepeatPeriod(KEY_REPEAT_PERIOD);
 		}
 
+		// Play the sound in a loop
+		playLoop("test/Liyue.wav");
+	}
+
+	public void startGame()
+	{
 		// Run the game
+		System.out.println("DoRun");
+		_gameStopped = false;
 		doRun();
+		System.out.println("Show");
 		show();
 	}
 
@@ -122,41 +139,25 @@ public class Game extends GameGrid
 	 * <p>
 	 * Potentially a Builder model could be implemented in the future
 	 *
-	 * @param properties properties loaded
+	 * @param propertiesFilename property name loaded
 	 */
-	private void initializeGameStates(Properties properties)
+	private void loadProperties(String propertiesFilename)
 	{
+		var properties = MapLoader.loadPropertiesFile(propertiesFilename);
 		//Setup simple random seeds
 		int seed = Integer.parseInt(properties.getProperty("seed"));
 		_player.setSeed(seed);
-
-		// Setup simple slow down
-		_player.setSlowDown(SLOW_DOWN_FACTOR);
-	}
-
-	/**
-	 * Create a Singleton instance of Game
-	 * <p>
-	 * This is not combined with getGame() since the constructor need to be called with argument.
-	 * Better implementation may be possible in the future.
-	 *
-	 * @param properties
-	 */
-	public static void initGame(Properties properties)
-	{
-		Editor.run();
-
-		_instance = new Game(properties);
-		_instance.startGame();
-		while (_instance.isRunning())
-		{
-			// Busy waiting
-			System.out.println("WAITING");
-		}
+		
+		// set autoMode
+		_autoMode = Boolean.parseBoolean(properties.getProperty("PacMan.isAuto"));
+		_player.setAutoMoves(properties.getProperty("PacMan.move"));
 	}
 
 	public static Game getGame()
 	{
+		// Create instance
+		if (_instance == null)
+			_instance = new Game();
 		return _instance;
 	}
 
@@ -176,6 +177,8 @@ public class Game extends GameGrid
 			doPause();
 			delay(END_GAME_DELAY);
 			declareGameResult();
+			this.hide();
+			returnToEditor();
 		}
 	}
 
@@ -268,13 +271,19 @@ public class Game extends GameGrid
 		this._win = isWin;
 	}
 
+	boolean editorRunning = false;
 	public void returnToEditor()
 	{
 		this._gameStopped = true;
 		doPause();
 
-		this.stopGameThread();
-		//Editor.run();
+
+		if (!editorRunning)
+		{
+			editorRunning = true;
+			hide();
+			Driver.RunEditor();
+		}
 	}
 
 	public PacMan getPlayer()
@@ -290,40 +299,14 @@ public class Game extends GameGrid
 				getNumPillsEaten());
 	}
 
-	/**
-	 * Set all monsters to FROZEN
-	 * <p>
-	 * Only works in MULTIVERSE mode.
-	 */
-	public void setFrozen()
-	{
-		if (_gameVersion == GameVersion.SIMPLE) return;
-
-		// For each monster, set it frozen
-		for (var actor : getActors())
-			if (actor instanceof Monster)
-				((Monster) actor).setFrozen();
-	}
-
-	/**
-	 * Set all monsters to FURIOUS
-	 * <p>
-	 * Only works in MULTIVERSE mode.
-	 * State will not change if the monster is already in FROZEN mode.
-	 */
-	public void setFurious()
-	{
-		if (_gameVersion == GameVersion.SIMPLE) return;
-
-		// For each monster, set it frozen
-		for (var actor : getActors())
-			if (actor instanceof Monster)
-				((Monster) actor).setFurious();
-	}
-
-	/** Keep going to next level */
-	public void nextLevel(){
-		//TODO
+	/** reset the whole game*/
+	public void resetAll(){
+//		// reset actors
+//		this.doReset();
+//		// reset our own parameters
+//		initializeGameStates(Game.getGame()._properties);
+		initGame();
+		getGame().startGame();
 	}
 }
 
