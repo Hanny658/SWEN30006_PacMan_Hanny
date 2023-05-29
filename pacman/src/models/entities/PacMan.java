@@ -9,13 +9,10 @@ import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.Location;
 import src.Game;
 import src.game.CollisionManager;
-import src.models.Collidable;
-import src.models.Consumable;
-import src.models.Entity;
+import src.models.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class PacMan extends Entity
 {
@@ -25,18 +22,12 @@ public class PacMan extends Entity
 	private static final int DEFAULT_SPEED = 1;
 	private static final boolean INVINCIBLE = false;
 	private boolean _autoMode = false;
-	private List<String> _autoMoves = null;
+	private Queue<Location> _pendingMoves = new LinkedList<>();
 	private int _autoMoveIndex = 0;
 
 	public PacMan()
 	{
 		super(true, DEFAULT_SPRITE, NUM_SPRITES);
-	}
-
-	public void setAutoMoves(String autoMoveString)
-	{
-		if (autoMoveString != null)
-			this._autoMoves = Arrays.asList(autoMoveString.split(","));
 	}
 
 	@Override
@@ -60,15 +51,79 @@ public class PacMan extends Entity
 		return DEFAULT_SPEED;
 	}
 
+	/** Greedy Move from Project 1
+	 *  Now Upgrade to BFS to the closest Pill/Gold Position */
 	private void moveInAutoMode()
 	{
-		if (_autoMoves != null && _autoMoveIndex < _autoMoves.size())
+		Location next;
+
+		// If there's no pending moves left
+		if (_pendingMoves.isEmpty())
+			this.findMyWay();
+
+		// Move to next pending move
+		next = _pendingMoves.poll();
+		if (next != null && canMove(next))
 		{
-			followPropertyMoves();
+			setLocation(next);
 			return;
 		}
+		// Or if it fails to find way
+		this.greedyMove();
+	}
 
-		Location closestPill = closestPillLocation();
+	/** Find way to the closest Pill/Gold with BFS algorithm */
+	private void findMyWay()
+	{
+		Location startPos = getLocation();
+		Location destPos = closestGPLocation();
+		Set<Location> visited = new HashSet<>();
+
+		// Use HashMap instead of BFSNode that stores [Current Pos: FromPos]
+		Map<Location, Location> fromTable = new HashMap<>();
+		Queue<Location> queue = new LinkedList<>();
+
+		visited.add(startPos);
+		queue.add(startPos);
+		Location curr = null;
+
+		// Start BFS until reached aiming position
+		while (!queue.isEmpty())
+		{
+			curr = queue.poll();
+
+			// if current position is not movable
+			if (!canMove(curr))
+				continue;
+			visited.add(curr);
+
+			// If reached aimed Location
+			if (curr.x == destPos.x && curr.y == destPos.y)
+				break;
+
+			// Expand to neighboring locations
+			List<Location> neighbors = curr.getNeighbourLocations(1);
+			for (Location neighbour : neighbors)
+			{
+				if (canMove(neighbour) && visited.contains(neighbour))
+				{
+					queue.add(neighbour);
+					fromTable.put(neighbour, curr);
+				}
+			}
+		}
+		// Extract path to the pendingMoves list
+		List<Location> revPath = new ArrayList<>();
+		while (!curr.equals(startPos))
+		{
+			curr = fromTable.get(curr);
+		}
+	}
+
+	// TODO: delete/refactor [GreedyMove]
+	private void greedyMove(){
+		// Greedy Part
+		Location closestPill = closestGPLocation();
 		double oldDirection = getDirection();
 
 		Location.CompassDirection compassDir =
@@ -120,26 +175,6 @@ public class PacMan extends Entity
 		this.addVisitedList(next);
 	}
 
-	private void followPropertyMoves()
-	{
-		String currentMove = _autoMoves.get(_autoMoveIndex);
-		switch (currentMove)
-		{
-			case "R":
-				turn(90);
-				break;
-			case "L":
-				turn(-90);
-				break;
-			case "M":
-				Location next = getNextMoveLocation();
-				if (canMove(next))
-					setLocation(next);
-				break;
-		}
-		_autoMoveIndex++;
-	}
-
 	@Override
 	public void onCollide(Collidable collidable)
 	{
@@ -167,7 +202,7 @@ public class PacMan extends Entity
 	 *
 	 * @return a location
 	 */
-	private Location closestPillLocation()
+	private Location closestGPLocation()
 	{
 		int minDistance = Integer.MAX_VALUE;
 		Location minLocation = null;
@@ -176,6 +211,7 @@ public class PacMan extends Entity
 		List<Location> pillAndItemLocations = new ArrayList<>();
 		for (var actor : Game.getGame().getActors())
 			if (actor instanceof Consumable)
+				// TODO: Check if IceCube still took in count
 				pillAndItemLocations.add(actor.getLocation());
 
 		for (Location location : pillAndItemLocations)

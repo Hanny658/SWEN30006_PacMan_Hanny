@@ -1,5 +1,6 @@
 package src.models;
 
+import ch.aplu.util.Size;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -21,17 +22,17 @@ public class GameMapSchema
 
 	private Size _size;
 
-	public Size getSize() { return _size; }
+	public ch.aplu.util.Size getMapSize() { return getSize() == null ? null : new ch.aplu.util.Size(getSize()._width, getSize()._height); }
+	private Size getSize() { return _size; }
 	@XmlElement(name = SIZE_NODE)
-
-	public void setSize(Size size) { _size = size; }
+	private void setSize(Size size) { _size = size; }
 
 	public ArrayList<Row> getRows() { return _rows; }
 
 	@XmlElement(name = ROW_NODE)
-	public void setRows(ArrayList<Row> rows) { _rows = rows; }
+	private void setRows(ArrayList<Row> rows) { _rows = rows; }
 
-	public static class Size
+	private static class Size
 	{
 		private int _width;
 

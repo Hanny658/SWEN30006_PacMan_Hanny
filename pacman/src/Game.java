@@ -19,7 +19,6 @@ import src.models.entities.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class Game extends GameGrid
 {
@@ -127,10 +126,8 @@ public class Game extends GameGrid
 	public void startGame()
 	{
 		// Run the game
-		System.out.println("DoRun");
 		_gameStopped = false;
 		doRun();
-		System.out.println("Show");
 		show();
 	}
 
@@ -150,7 +147,6 @@ public class Game extends GameGrid
 		
 		// set autoMode
 		_autoMode = Boolean.parseBoolean(properties.getProperty("PacMan.isAuto"));
-		_player.setAutoMoves(properties.getProperty("PacMan.move"));
 	}
 
 	public static Game getGame()

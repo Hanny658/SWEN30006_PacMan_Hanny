@@ -1,0 +1,1 @@
+test/testamoffat1213.xml - game map xml file invalid

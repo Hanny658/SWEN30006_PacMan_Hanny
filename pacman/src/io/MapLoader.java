@@ -115,86 +115,17 @@ public final class MapLoader
 		return itemLocations;
 	}
 
-	/**
-	 * Check if property got a value, if not, load with default
-	 */
-	public static void loadWithProperty(GameGrid grid, Properties properties)
-	{
-		// Clear the grid with path blocks
-		grid.getBg().clear(Color.lightGray);
-
-		ArrayList<Location> itemLocation;
-		// Load Pills if exist in property file
-		if (properties.containsKey(KEY_FOR_PILL))
-		{
-			itemLocation = loadItems(properties, KEY_FOR_PILL);
-			for (Location loc : itemLocation)
-			{
-				Pill pill = new Pill();
-				grid.addActor(pill, loc);
-			}
-		}
-		else
-		{
-			loadWithDefault(grid, '.');
-		}
-		// Load gold if exist in property file
-		if (properties.containsKey(KEY_FOR_GOLD))
-		{
-			itemLocation = loadItems(properties, KEY_FOR_GOLD);
-			for (Location loc : itemLocation)
-			{
-				GoldPiece gold = new GoldPiece();
-				grid.addActor(gold, loc);
-			}
-		}
-		else
-		{
-			loadWithDefault(grid, 'g');
-		}
-		// Ice cubes were always default. For extension, make it possible to load if exists
-		if (properties.containsKey(KEY_FOR_ICE))
-		{
-			itemLocation = loadItems(properties, KEY_FOR_ICE);
-			for (Location loc : itemLocation)
-			{
-				IceCube ice = new IceCube();
-				grid.addActor(ice, loc);
-			}
-		}
-		else
-		{
-			loadWithDefault(grid, 'i');
-		}
-		// Similarly for the Wall Object
-		if (properties.containsKey(KEY_FOR_WALL))
-		{
-			itemLocation = loadItems(properties, KEY_FOR_WALL);
-			for (Location loc : itemLocation)
-			{
-				Wall wall = new Wall();
-				grid.addActor(wall, loc);
-			}
-		}
-		else
-		{
-			loadWithDefault(grid, 'x');
-		}
-	}
-
 	public static boolean loadFromXml(GameGrid grid, String filename)
 	{
-		var result = GameMapXmlParser.loadEntityFromXml(filename);
-		var entities = result.item1();
-		var mapSize = result.item2();
-		var valid = LevelChecker.checkMap(entities, mapSize, filename);
+		var gameMap = GameMapXmlParser.loadEntityFromXml(filename);
+		var valid = LevelChecker.checkMap(gameMap, filename);
 		if (!valid)
 			return false;
 		// Clear the grid with path blocks
 		grid.getBg().clear(Color.lightGray);
 		try
 		{
-			for (var entry : entities.entrySet())
+			for (var entry : gameMap.getEntities().entrySet())
 			{
 				var location = entry.getKey();
 				var entity = entry.getValue();

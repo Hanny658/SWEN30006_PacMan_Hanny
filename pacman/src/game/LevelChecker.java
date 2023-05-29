@@ -1,22 +1,19 @@
 package src.game;
 
-import ch.aplu.jgamegrid.Location;
 import src.game.levelchecks.*;
 import src.io.LogManager;
-import src.models.Entity;
-import src.models.GameMapSchema;
+import src.models.GameMap;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class LevelChecker
 {
-    private static final List<LevelCheck> _checks;
+    private static final List<LevelCheck> _checks = new ArrayList<>();
     static
     {
-        _checks = new ArrayList<>();
         // Define what to check
+        _checks.add(new FileFormatCheck());
         _checks.add(new PacManCheck());
         _checks.add(new PortalCheck());
         _checks.add(new GPNumCheck());
@@ -25,19 +22,26 @@ public class LevelChecker
     }
 
     /** Checks the map and print to the game logfile */
-    public static boolean checkMap(Map<Location, Entity> entities, GameMapSchema.Size mapSize, String filename)
+    public static boolean checkMap(GameMap gameMap, String filename)
     {
         boolean passed = true;
         boolean checkForGPAccessibility = true;
+        boolean fatalError = false;
         for (var check : _checks)
         {
+            // No need to check for anything else if encounters fatal error
+            if (fatalError)
+                break;
+
             // Do not check Accessibility if failed any test before
             if (check instanceof GPAccessibilityCheck)
                 if (!checkForGPAccessibility) continue;
 
-            var result = check.check(entities, mapSize);
+            var result = check.check(gameMap);
             if (!result.success())
             {
+                if (check instanceof FileFormatCheck)
+                    fatalError = true;
                 // GPNumCheck won't affect GPAccessibilityCheck
                 if (!(check instanceof GPNumCheck))
                     checkForGPAccessibility = false;

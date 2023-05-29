@@ -1,9 +1,9 @@
 package src.game.levelchecks;
 
 import ch.aplu.jgamegrid.Location;
-import src.Alistair;
+import ch.aplu.util.Size;
 import src.models.Entity;
-import src.models.GameMapSchema;
+import src.models.GameMap;
 import src.models.entities.*;
 
 import java.util.*;
@@ -23,12 +23,13 @@ public class GPAccessibilityCheck implements LevelCheck
 	}
 
 	@Override
-	public LevelCheckResult check(Map<Location, Entity> theMap, GameMapSchema.Size mapSize)
+	public LevelCheckResult check(GameMap gameMap)
 	{
 		Location pacLocation = null;
-
+		var entities = gameMap.getEntities();
+		var mapSize = gameMap.getSize();
 		// Extract pacman location
-		for (var entry : theMap.entrySet())
+		for (var entry : entities.entrySet())
 		{
 			var entity = entry.getValue();
 			if (entity instanceof PacMan)
@@ -55,7 +56,7 @@ public class GPAccessibilityCheck implements LevelCheck
 				continue;
 
 			// Check if the location is not in the map (path)
-			if (!containsLocation(theMap.keySet(), current))
+			if (!containsLocation(entities.keySet(), current))
 			{
 				// Path
 				accessibleArea.add(current);
@@ -76,7 +77,7 @@ public class GPAccessibilityCheck implements LevelCheck
 			{
 				// NOT Path
 				Entity entity = null;
-				for (var entry : theMap.entrySet())
+				for (var entry : entities.entrySet())
 				{
 					var location = entry.getKey();
 					var ent = entry.getValue();
@@ -93,7 +94,7 @@ public class GPAccessibilityCheck implements LevelCheck
 				else if (entity instanceof Portal)
 				{
 					// Find the destination location and mark it as accessible
-					Location destination = tpPointOf(theMap, (Portal) entity, current);
+					Location destination = tpPointOf(entities, (Portal) entity, current);
 
 					accessibleArea.add(destination);
 
@@ -125,7 +126,7 @@ public class GPAccessibilityCheck implements LevelCheck
 		List<Location> inaccessibleGolds = new ArrayList<>();
 
 		// Now we have a set of accessible area
-		for (var entry : theMap.entrySet())
+		for (var entry : entities.entrySet())
 		{
 			var entity = entry.getValue();
 			var location = entry.getKey();
@@ -158,9 +159,9 @@ public class GPAccessibilityCheck implements LevelCheck
 	}
 
 	// Find the destination of given portal of given position
-	private Location tpPointOf(Map<Location, Entity> theMap, Portal p, Location curr)
+	private Location tpPointOf(Map<Location, Entity> entities, Portal p, Location curr)
 	{
-		for (var entry : theMap.entrySet())
+		for (var entry : entities.entrySet())
 		{
 			var entity = entry.getValue();
 			if (entity == p) continue;
