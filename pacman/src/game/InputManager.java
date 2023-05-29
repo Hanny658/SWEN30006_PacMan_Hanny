@@ -39,14 +39,15 @@ public class InputManager implements GGKeyRepeatListener
 		KEY_TO_DIRECTION.put(KeyEvent.VK_RIGHT, Location.EAST);
 	}
 
-	private final Entity _entityToControl;
+	private Entity _entityToControl;
 	private final Game _game;
 
-	public InputManager(Game game, Entity entityToControl)
+	public InputManager(Game game)
 	{
-		this._entityToControl = entityToControl;
 		this._game = game;
 	}
+
+	public void setEntityToControl(Entity entityToControl) { _entityToControl = entityToControl; }
 
 	/**
 	 * The function is called everytime a key has pressed
@@ -62,6 +63,8 @@ public class InputManager implements GGKeyRepeatListener
 		// Check if the pressed key is registered with a direction to move
 		if (!KEY_TO_DIRECTION.containsKey(keyCode))
 			return; // Fail fast
+
+		if (_entityToControl == null) return;
 
 		var direction = KEY_TO_DIRECTION.get(keyCode);
 		_entityToControl.setDirection(direction);

@@ -137,7 +137,7 @@ public class PacMan extends Entity
 			this._pendingMoves.add(revPath.get(i-1));
 	}
 
-	// TODO: delete/refactor [GreedyMove]
+	//TODO: delete/refactor [GreedyMove]
 	private void greedyMove(){
 		// Greedy Part
 		Location closestPill = closestGPLocation();

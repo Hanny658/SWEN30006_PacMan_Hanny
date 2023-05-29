@@ -17,10 +17,10 @@ public class GameLevels
 {
     private static final String NO_MAPS = "no maps found";
     private static final String CONFLICT_MAPS = "multiple maps at same level";
-    private final LinkedHashMap<Integer, GameMap> _levels;
+    private final List<GameMap> _levels;
 
 
-    private GameLevels(LinkedHashMap<Integer, GameMap> levels)
+    private GameLevels(List<GameMap> levels)
     {
         this._levels = levels;
     }
@@ -102,20 +102,19 @@ public class GameLevels
         return sortGameMap(validGameMaps);
     }
 
-    private static LinkedHashMap<Integer, GameMap> loadLevels(LinkedHashMap<Integer, String> levels)
+    private static List<GameMap> loadLevels(LinkedHashMap<Integer, String> levels)
     {
         boolean levelsValid = true;
-        var sortedGameMaps = new LinkedHashMap<Integer, GameMap>();
+        var sortedGameMaps = new ArrayList<GameMap>();
         for (var mapFile : levels.entrySet())
         {
             var filename = mapFile.getValue();
-            System.out.println("CHECKING: " + filename);
             var index = mapFile.getKey();
             var map = GameMapXmlParser.loadEntityFromXml(filename);
             if (!LevelChecker.checkMap(map, filename))
                 levelsValid = false;
             if (levelsValid)
-                sortedGameMaps.put(index, map);
+                sortedGameMaps.add(map);
         }
         if (!levelsValid)
             return null;
@@ -154,8 +153,18 @@ public class GameLevels
     }
 
     /** Get all the levels */
-    public LinkedHashMap<Integer, GameMap> getLevels()
+    public List<GameMap> getLevels()
     {
         return this._levels;
+    }
+
+    public GameMap getLevel(int index)
+    {
+        return getLevels().get(index);
+    }
+
+    public int getNumLevels()
+    {
+        return getLevels().size();
     }
 }

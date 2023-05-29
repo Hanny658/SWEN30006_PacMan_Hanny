@@ -13,18 +13,21 @@ import ch.aplu.jgamegrid.Location;
 import src.game.*;
 import src.io.GameCallback;
 import src.io.LogManager;
-import src.io.MapLoader;
 import src.models.Collidable;
 import src.models.entities.*;
 import src.io.GameLevels;
 
+import java.awt.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class Game extends GameGrid
 {
 	private static final String DEFAULT_PROPERTIES_PATH = "test.properties";
-	private static final String FOLDER_PATH = "test";
 	private static final String GAME_TITLE = "[PacMan in the TorusVerse]";
 	private static final String SCORE_TITLE = "%s Current score: %d";
 	private static final String WIN_TITLE = "YOU WIN";
@@ -43,6 +46,9 @@ public class Game extends GameGrid
 	private PortalManager _portalManager;
 	private int _score = 0;
 	private int _numPillsEaten = 0;
+	private GameLevels _levels;
+	private int _currentLevel = 0;
+	private int _seed = 0;
 	private boolean _gameStopped = false;
 	private boolean _win = false;
 	private boolean _autoMode = false;
@@ -53,80 +59,102 @@ public class Game extends GameGrid
 		super(DEFAULT_WIDTH, DEFAULT_HEIGHT, CELL_SIZE, ENGINE_DEBUG_MODE);
 	}
 
-	public static void newGame()
+	public static boolean newGame(String gameFolder)
 	{
+		// Before creating new instance, dispose the previous instance
 		if (_instance != null)
-		{
 			_instance.getFrame().dispose();
-			_instance = null;
-		}
-		getGame();
+
+		// Load levels (perform game check and level checks)
+		var levels = GameLevels.fromFolder(gameFolder);
+
+		// If any check fails, do not create game instance
+		if (levels == null)
+			return false;
+
+		// If all check passed, start the game and initialise with the loaded levels
+		_instance = new Game();
+		_instance.init(levels);
+		return true;
 	}
 
 	/**
-	 * Initialise a game (reload map and properties)
+	 * Initialise a game (Load map and properties)
 	 */
-	public void initGame()
+	private void init(GameLevels levels)
 	{
-		//Setup game
+		// TODO: DEBUG
+		System.err.println("Game started with maps:");
+		levels.getLevels().forEach(value ->
+				System.err.printf("%s\n", value));
+
+		// Setup game
 		setSimulationPeriod(SIMULATION_PERIOD);
 		setTitle(GAME_TITLE);
-		var gameLevels = GameLevels.fromFolder(FOLDER_PATH);
-		if (gameLevels == null)
-		{
-			System.exit(1);
-			return;
-		}
-
-		// TODO: DEBUG
-		gameLevels.getLevels().forEach((key, value) -> System.err.printf("Valid map: %d: %s\n", key, value));
-
-		boolean mapValid = MapLoader.fromXml(this, "test/testamoffat.xml");
-		if (!mapValid)
-		{
-			System.err.println("Map invalid, Check error log for errors.");
-			System.exit(1);
-			return;
-		}
-
-		_portalManager = new PortalManager();
-		List<Portal> portals = new ArrayList<>();
-		for (var entity : this.getActors())
-			if (entity instanceof Portal)
-				portals.add((Portal) entity);
-
-		_portalManager.autoRegister(portals);
-
-		//Setup for auto test
-		for (var entity : this.getActors())
-		{
-			if (entity instanceof PacMan)
-			{
-				_player = (PacMan) entity;
-				_playerInput = new InputManager(this, _player);
-			}
-		}
-
-		// Setup simple slow down
-		_player.setSlowDown(SLOW_DOWN_FACTOR);
 
 		loadProperties(DEFAULT_PROPERTIES_PATH);
-		
+		_levels = levels;
+
 		// Setup input controller
 		// Refuse input if in auto mode
 		if (!_autoMode)
 		{
-			addKeyRepeatListener(_playerInput);
+			addKeyRepeatListener(getInputManager());
 			setKeyRepeatPeriod(KEY_REPEAT_PERIOD);
 		}
 	}
 
 	public void startGame()
 	{
-		// Run the game
-		_gameStopped = false;
+		loadLevel(_currentLevel);
 		doRun();
 		show();
+	}
+
+	private void loadLevel(int currentLevel)
+	{
+		getInputManager().setEntityToControl(null);
+		removeAllActors();
+		doReset();
+		// Clear the grid with path blocks
+		getBg().clear(Color.lightGray);
+
+		var level = _levels.getLevel(currentLevel);
+		List<Portal> portals = new ArrayList<>();
+		try
+		{
+			for (var entry : level.getEntities().entrySet())
+			{
+				var location = entry.getKey();
+				var entity = entry.getValue();
+				addActor(entity, location);
+				entity.setSeed(_seed);
+				if (entity instanceof PacMan)
+				{
+					_player = (PacMan) entity;
+					_player.setSlowDown(SLOW_DOWN_FACTOR);
+					getInputManager().setEntityToControl(_player);
+				}
+				else if (entity instanceof Portal)
+					portals.add((Portal) entity);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		setPaintOrder(PacMan.class);
+		_portalManager = new PortalManager();
+		_portalManager.autoRegister(portals);
+		doRun();
+	}
+
+	private InputManager getInputManager()
+	{
+		if (_playerInput == null)
+			_playerInput = new InputManager(this);
+		return _playerInput;
 	}
 
 	/**
@@ -138,13 +166,25 @@ public class Game extends GameGrid
 	 */
 	private void loadProperties(String propertiesFilename)
 	{
-		var properties = MapLoader.loadPropertiesFile(propertiesFilename);
-		//Setup simple random seeds
-		int seed = Integer.parseInt(properties.getProperty("seed"));
-		_player.setSeed(seed);
-		
-		// set autoMode
-		_autoMode = Boolean.parseBoolean(properties.getProperty("PacMan.isAuto"));
+		try (InputStream input = new FileInputStream(propertiesFilename))
+		{
+			Properties prop = new Properties();
+			// load a properties file
+			prop.load(input);
+			// purity by removing empty values
+			for (Object key : prop.keySet())
+				if (prop.getProperty((String) key).equals(""))
+					prop.remove(key);
+
+			//Setup simple random seeds
+			_seed = Integer.parseInt(prop.getProperty("seed"));
+			// set autoMode
+			_autoMode = Boolean.parseBoolean(prop.getProperty("PacMan.isAuto"));
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 	public static Game getGame()
@@ -218,7 +258,10 @@ public class Game extends GameGrid
 			if (actor instanceof Pill && actor.isVisible() || actor instanceof GoldPiece && actor.isVisible())
 				return;
 		}
-		this.stopGame(true);
+		if (_currentLevel >= _levels.getNumLevels() - 1)
+			this.stopGame(true);
+		else
+			loadLevel(++_currentLevel);
 	}
 
 	public void changeScore(int byValue)

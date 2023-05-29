@@ -6,13 +6,11 @@ package src;
 
 import src.io.GameCallback;
 import src.io.LogManager;
-import src.io.MapLoader;
 import src.mapeditor.Editor;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Properties;
 
 public class Driver
 {
@@ -70,9 +68,9 @@ public class Driver
 		// Minimal modification is intended even though there might be better implementation
 		// Logging is made available anywhere via a static wrapper
 		LogManager.setGameCallback(new GameCallback());
-		Game.newGame();
+		if (!Game.newGame("good"))
+			return;
 		var game = Game.getGame();
-		game.initGame();
 		game.startGame();
 	}
 }
