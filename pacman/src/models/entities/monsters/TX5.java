@@ -50,14 +50,9 @@ public class TX5 extends Monster
 
 		Location next = this.getLocation().getAdjacentLocation(pacDirection, getSpeed());
 		if (!isVisited(next) && moveTo(pacDirection))
-		{
 			setDirection(pacDirection);
-		}
 		else
-		{
-			// Random walk
 			super.randomMove(getDirection());
-		}
 		addVisitedList(this.getLocation());
 		super.walkApproach();
 	}

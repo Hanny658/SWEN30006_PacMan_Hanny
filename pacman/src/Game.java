@@ -96,13 +96,11 @@ public class Game extends GameGrid
 		_levels = levels;
 
 		// Setup input controller
-		// Refuse input if in auto mode
-		if (!_autoMode)
-		{
-			addKeyRepeatListener(getInputManager());
-			setKeyRepeatPeriod(KEY_REPEAT_PERIOD);
-		}
+		addKeyRepeatListener(getInputManager());
+		setKeyRepeatPeriod(KEY_REPEAT_PERIOD);
 	}
+
+	public boolean isGameStopped() { return _gameStopped; }
 
 	public void startGame()
 	{
@@ -133,7 +131,11 @@ public class Game extends GameGrid
 				{
 					_player = (PacMan) entity;
 					_player.setSlowDown(SLOW_DOWN_FACTOR);
-					getInputManager().setEntityToControl(_player);
+					_player.setAutoMode(_autoMode);
+					if (_autoMode)
+						getInputManager().setEntityToControl(null);
+					else
+						getInputManager().setEntityToControl(_player);
 				}
 				else if (entity instanceof Portal)
 					portals.add((Portal) entity);

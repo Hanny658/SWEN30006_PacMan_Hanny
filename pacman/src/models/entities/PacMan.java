@@ -45,6 +45,7 @@ public class PacMan extends Entity
 		Game.getGame().reportPlayerStatus();
 	}
 
+	public void setAutoMode(boolean isAuto) { _autoMode = isAuto; }
 	@Override
 	public int getSpeed()
 	{
@@ -58,17 +59,24 @@ public class PacMan extends Entity
 		Location next;
 
 		// If there's no pending moves left
-		if (_pendingMoves.isEmpty())
-			this.findMyWay();
+//		if (_pendingMoves.isEmpty())
+//			this.findMyWay();
+
+		System.out.printf("Pending moves: %d\n", _pendingMoves.size());
 
 		// Move to next pending move
 		next = _pendingMoves.poll();
+		if (next == null)
+			System.out.println("Null");
+		else
+			System.out.printf("Next: (%d, %d)\n", next.getX(), next.getY());
 		if (next != null && canMove(next))
 		{
 			setLocation(next);
 			return;
 		}
 		// Or if it fails to find way
+		System.out.println("Start greedy");
 		this.greedyMove();
 	}
 
@@ -139,6 +147,7 @@ public class PacMan extends Entity
 
 	//TODO: delete/refactor [GreedyMove]
 	private void greedyMove(){
+		System.out.println("Greedy");
 		// Greedy Part
 		Location closestPill = closestGPLocation();
 		double oldDirection = getDirection();
@@ -190,6 +199,7 @@ public class PacMan extends Entity
 			}
 		}
 		this.addVisitedList(next);
+		System.out.println("Greedy Done");
 	}
 
 	@Override

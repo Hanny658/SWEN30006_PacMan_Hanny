@@ -7,6 +7,7 @@
 package src.models.entities;
 
 import ch.aplu.jgamegrid.Location;
+import src.Game;
 import src.game.CollisionManager;
 import src.io.LogManager;
 import src.models.Collidable;
@@ -33,6 +34,9 @@ public abstract class Monster extends Entity implements Collidable
 	@Override
 	public void act()
 	{
+		if (Game.getGame().isGameStopped())
+			return;
+
 		if (getSpeed() == STILL_SPEED)
 			return;
 
