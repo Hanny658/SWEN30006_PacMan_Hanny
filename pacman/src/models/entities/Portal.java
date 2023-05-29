@@ -3,7 +3,6 @@ package src.models.entities;
 import src.game.PortalManager;
 import src.models.Collidable;
 import src.models.Entity;
-import src.models.GameVersion;
 
 public class Portal extends Entity implements Collidable
 {

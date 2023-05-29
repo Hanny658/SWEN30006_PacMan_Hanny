@@ -16,6 +16,7 @@ import src.io.LogManager;
 import src.io.MapLoader;
 import src.models.Collidable;
 import src.models.entities.*;
+import src.validation.GameChecker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,13 @@ import java.util.List;
 public class Game extends GameGrid
 {
 	private static final String DEFAULT_PROPERTIES_PATH = "test.properties";
+	private static final String FOLDER_PATH = "test";
 	private static final String GAME_TITLE = "[PacMan in the TorusVerse]";
 	private static final String SCORE_TITLE = "%s Current score: %d";
 	private static final String WIN_TITLE = "YOU WIN";
 	private static final String LOSE_TITLE = "GAME OVER";
-	private static final int NUM_CELLS_X = 20;
-	private static final int NUM_CELLS_Y = 11;
+	private static final int DEFAULT_WIDTH = 20;
+	private static final int DEFAULT_HEIGHT = 11;
 	private static final int SIMULATION_PERIOD = 100;
 	private static final int END_GAME_DELAY = 120;
 	private static final int CELL_SIZE = 20;
@@ -48,7 +50,7 @@ public class Game extends GameGrid
 
 	private Game()
 	{
-		super(NUM_CELLS_X, NUM_CELLS_Y, CELL_SIZE, ENGINE_DEBUG_MODE);
+		super(DEFAULT_WIDTH, DEFAULT_HEIGHT, CELL_SIZE, ENGINE_DEBUG_MODE);
 	}
 
 	public static void newGame()
@@ -69,7 +71,7 @@ public class Game extends GameGrid
 		//Setup game
 		setSimulationPeriod(SIMULATION_PERIOD);
 		setTitle(GAME_TITLE);
-		var gameMaps = GameChecker.checkGameFolder();
+		var gameMaps = GameChecker.checkGameFolder(FOLDER_PATH);
 		if (gameMaps == null)
 		{
 			System.err.println("Game check failed.");
@@ -109,8 +111,7 @@ public class Game extends GameGrid
 		_player.setSlowDown(SLOW_DOWN_FACTOR);
 
 		loadProperties(DEFAULT_PROPERTIES_PATH);
-
-
+		
 		// Setup input controller
 		// Refuse input if in auto mode
 		if (!_autoMode)
@@ -118,9 +119,6 @@ public class Game extends GameGrid
 			addKeyRepeatListener(_playerInput);
 			setKeyRepeatPeriod(KEY_REPEAT_PERIOD);
 		}
-
-		// Play the sound in a loop
-		playLoop("test/Liyue.wav");
 	}
 
 	public void startGame()
@@ -270,16 +268,14 @@ public class Game extends GameGrid
 	boolean editorRunning = false;
 	public void returnToEditor()
 	{
+		if (editorRunning)
+			return;
+
 		this._gameStopped = true;
 		doPause();
-
-
-		if (!editorRunning)
-		{
-			editorRunning = true;
-			hide();
-			Driver.RunEditor();
-		}
+		hide();
+		Driver.RunEditor();
+		editorRunning = true;
 	}
 
 	public PacMan getPlayer()
@@ -293,16 +289,6 @@ public class Game extends GameGrid
 				getPlayer().getLocation(),
 				getScore(),
 				getNumPillsEaten());
-	}
-
-	/** reset the whole game*/
-	public void resetAll(){
-//		// reset actors
-//		this.doReset();
-//		// reset our own parameters
-//		initializeGameStates(Game.getGame()._properties);
-		initGame();
-		getGame().startGame();
 	}
 }
 

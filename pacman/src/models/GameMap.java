@@ -38,6 +38,17 @@ public class GameMap
 	}
 
 	public Map<Location, Entity> getEntities() { return _entities; }
+	public Entity getEntityAt(Location atLocation)
+	{
+		for (var entry : getEntities().entrySet())
+		{
+			var location = entry.getKey();
+			var entity = entry.getValue();
+			if (location.equals(atLocation))
+				return entity;
+		}
+		return null;
+	}
 
 	public Size getSize() { return _size; }
 

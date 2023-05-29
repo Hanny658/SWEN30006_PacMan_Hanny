@@ -25,6 +25,7 @@ public abstract class Entity extends Actor implements Collidable, Cloneable
 	private int _spriteId = 0;
 	private boolean _isRotatable;
 	private int _numSprites;
+	private int _speed = STILL_SPEED;
 	private final List<Location> _visitedList = new ArrayList<>();
 	private final int _listLength = 10;
 	protected Random randomiser = new Random(0);
@@ -65,10 +66,9 @@ public abstract class Entity extends Actor implements Collidable, Cloneable
 	 *
 	 * @return an int of speed
 	 */
-	public int getSpeed()
-	{
-		return STILL_SPEED;
-	}
+	public int getSpeed() { return _speed; }
+
+	public void setSpeed(int speed) { _speed = speed; }
 
 	/**
 	 * Gets a string name of entity for logging usage

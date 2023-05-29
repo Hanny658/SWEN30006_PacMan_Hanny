@@ -10,9 +10,7 @@ package src.io;
 import ch.aplu.jgamegrid.GameGrid;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.util.Size;
-import src.game.LevelChecker;
-import src.models.Entity;
-import src.models.MonsterStates;
+import src.validation.LevelChecker;
 import src.models.entities.*;
 import src.models.entities.monsters.TX5;
 
@@ -130,11 +128,6 @@ public final class MapLoader
 				var location = entry.getKey();
 				var entity = entry.getValue();
 				grid.addActor(entity, location);
-				if (entity instanceof TX5)
-				{
-					entity.setDirection(Location.NORTH);
-					((TX5) entity).setStateForSeconds(MonsterStates.FROZEN, 5);
-				}
 			}
 		}
 		catch (Exception e)

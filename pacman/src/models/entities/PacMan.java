@@ -101,6 +101,19 @@ public class PacMan extends Entity
 			if (curr.x == destPos.x && curr.y == destPos.y)
 				break;
 
+			// Check if a portal is encountered
+			var actorsWithMe = this.gameGrid.getActorsAt(curr);
+			for (Actor a : actorsWithMe)
+			{
+				if (a instanceof Portal)
+				{
+					// if so, teleport to the destination and continue spanning
+					Location dest = ((Portal) a).getManager().getPairedPortal((Portal) a).getLocation();
+					fromTable.put(dest, curr);
+					curr = dest;
+				}
+			}
+
 			// Expand to neighboring locations
 			List<Location> neighbors = curr.getNeighbourLocations(1);
 			for (Location neighbour : neighbors)
@@ -116,8 +129,12 @@ public class PacMan extends Entity
 		List<Location> revPath = new ArrayList<>();
 		while (!curr.equals(startPos))
 		{
+			revPath.add(curr);
 			curr = fromTable.get(curr);
 		}
+		// Store back to the pending moves
+		for (int i = revPath.size(); i>0; i--)
+			this._pendingMoves.add(revPath.get(i-1));
 	}
 
 	// TODO: delete/refactor [GreedyMove]

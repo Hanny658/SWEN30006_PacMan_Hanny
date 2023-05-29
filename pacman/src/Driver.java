@@ -68,10 +68,8 @@ public class Driver
 	{
 		// GameCallback is barely touched
 		// Minimal modification is intended even though there might be better implementation
-		GameCallback gameCallback = new GameCallback();
-
 		// Logging is made available anywhere via a static wrapper
-		LogManager.setGameCallback(gameCallback);
+		LogManager.setGameCallback(new GameCallback());
 		Game.newGame();
 		var game = Game.getGame();
 		game.initGame();

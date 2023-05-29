@@ -13,11 +13,32 @@ import src.models.entities.Wall;
 
 public class TX5 extends Monster
 {
-	static final String DEFAULT_SPRITE = "sprites/m_tx5.gif";
+	private static final String DEFAULT_SPRITE = "sprites/m_tx5.gif";
+	private static final long FROZEN_TIME = 5;
+	private static final int SEC_TO_MILLI = 1000;
+
+	private long _timeToMove = 0;
 
 	public TX5()
 	{
 		super(DEFAULT_SPRITE);
+
+		// TX5 will not move at the beginning
+		this.setSpeed(STILL_SPEED);
+	}
+
+	@Override
+	public void act()
+	{
+		super.act();
+
+		// Timer counts at the first tick of object being rendered
+		if (_timeToMove == 0)
+			_timeToMove = System.currentTimeMillis() + FROZEN_TIME * SEC_TO_MILLI;
+
+		// If time to move, set to normal speed
+		if (System.currentTimeMillis() >= _timeToMove)
+			this.setSpeed(SPEED_NORM);
 	}
 
 	@Override
