@@ -1,10 +1,11 @@
-package src.validation;
+package src.io;
 
-import src.Alistair;
-import src.io.LogManager;
+import src.models.GameMap;
 import src.models.Pair;
+import src.validation.LevelChecker;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -12,14 +13,39 @@ import java.util.*;
  * a. at least one correctly named map file in the folder
  * b. the sequence of map files well-defined (only one map named with a particular number)
  */
-public class GameChecker
+public class GameLevels
 {
     private static final String NO_MAPS = "no maps found";
     private static final String CONFLICT_MAPS = "multiple maps at same level";
+    private final LinkedHashMap<Integer, GameMap> _levels;
+
+
+    private GameLevels(LinkedHashMap<Integer, GameMap> levels)
+    {
+        this._levels = levels;
+    }
 
     /** Check the validity of a GameMap Folder and returns null if any check(s) failed.
      *  return a sorted LinkedHashMap that keep entry in order for the game level */
-    public static LinkedHashMap<Integer, String> checkGameFolder(String gameFolder)
+    public static GameLevels fromFolder(String gameFolder)
+    {
+        var sortedMapFiles = getValidMaps(gameFolder);
+        if (sortedMapFiles == null)
+        {
+            System.err.println("Game check failed.");
+            return null;
+        }
+
+        System.err.println("Game check passed. Loading levels...");
+
+        // Conduct level checking if file checking all passed
+        var sortedGameMaps = loadLevels(sortedMapFiles);
+        if (sortedGameMaps == null)
+            return null;
+        return new GameLevels(sortedGameMaps);
+    }
+
+    private static LinkedHashMap<Integer, String> getValidMaps(String gameFolder)
     {
         File folder = new File(gameFolder);
         File[] files = folder.listFiles();
@@ -48,7 +74,7 @@ public class GameChecker
             if (validGameMaps.containsKey(index))
                 conflictedIndicies.add(index);
             else
-                validGameMaps.put(index, filename);
+                validGameMaps.put(index, String.valueOf(Paths.get(gameFolder, filename)));
         });
 
         if (validGameMaps.isEmpty())
@@ -66,15 +92,34 @@ public class GameChecker
                     {
                         var index = pair.item1();
                         var filename = pair.item2();
-                        if (index == conflictedIndex)
+                        if (Objects.equals(index, conflictedIndex))
                             conflictedFiles.add(filename);
                     }));
             String errorFiles = String.join("; ", conflictedFiles);
             LogManager.errorLog(String.format("%s - %s: %s", gameFolder, CONFLICT_MAPS, errorFiles));
             return null;
         }
-
         return sortGameMap(validGameMaps);
+    }
+
+    private static LinkedHashMap<Integer, GameMap> loadLevels(LinkedHashMap<Integer, String> levels)
+    {
+        boolean levelsValid = true;
+        var sortedGameMaps = new LinkedHashMap<Integer, GameMap>();
+        for (var mapFile : levels.entrySet())
+        {
+            var filename = mapFile.getValue();
+            System.out.println("CHECKING: " + filename);
+            var index = mapFile.getKey();
+            var map = GameMapXmlParser.loadEntityFromXml(filename);
+            if (!LevelChecker.checkMap(map, filename))
+                levelsValid = false;
+            if (levelsValid)
+                sortedGameMaps.put(index, map);
+        }
+        if (!levelsValid)
+            return null;
+        return sortedGameMaps;
     }
 
     /** Extract the number of given xml filename */
@@ -106,5 +151,11 @@ public class GameChecker
             sortedMap.put(entry.getKey(), entry.getValue());
 
         return sortedMap;
+    }
+
+    /** Get all the levels */
+    public LinkedHashMap<Integer, GameMap> getLevels()
+    {
+        return this._levels;
     }
 }

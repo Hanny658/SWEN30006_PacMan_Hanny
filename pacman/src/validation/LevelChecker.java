@@ -4,6 +4,7 @@ import src.validation.levelchecks.*;
 import src.io.LogManager;
 import src.models.GameMap;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,13 +63,13 @@ public class LevelChecker
                                     errorLocation.x + 1, errorLocation.y + 1, i < size - 1 ? deliminator : "");
                         }
                     }
-                    LogManager.errorLog(String.format("%s - %s", filename, errorMessage));
+                    LogManager.errorLog(String.format("%s - %s", Paths.get(filename).getFileName(), errorMessage));
                 }
             }
         }
         // TODO: DEBUG
         if (passed)
-            System.err.printf("Level check passed.");
+            System.err.printf("Level check passed: %s\n", filename);
         return passed;
     }
 }

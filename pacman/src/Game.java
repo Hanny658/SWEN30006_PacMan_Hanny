@@ -16,7 +16,7 @@ import src.io.LogManager;
 import src.io.MapLoader;
 import src.models.Collidable;
 import src.models.entities.*;
-import src.validation.GameChecker;
+import src.io.GameLevels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,17 +71,17 @@ public class Game extends GameGrid
 		//Setup game
 		setSimulationPeriod(SIMULATION_PERIOD);
 		setTitle(GAME_TITLE);
-		var gameMaps = GameChecker.checkGameFolder(FOLDER_PATH);
-		if (gameMaps == null)
+		var gameLevels = GameLevels.fromFolder(FOLDER_PATH);
+		if (gameLevels == null)
 		{
-			System.err.println("Game check failed.");
 			System.exit(1);
 			return;
 		}
-		System.err.println("Game check passed.");
-		gameMaps.entrySet().forEach(entry -> System.err.printf("Valid map: %d: %s\n", entry.getKey(), entry.getValue()));
 
-		boolean mapValid = MapLoader.loadFromXml(this, "test/testamoffat.xml");
+		// TODO: DEBUG
+		gameLevels.getLevels().forEach((key, value) -> System.err.printf("Valid map: %d: %s\n", key, value));
+
+		boolean mapValid = MapLoader.fromXml(this, "test/testamoffat.xml");
 		if (!mapValid)
 		{
 			System.err.println("Map invalid, Check error log for errors.");

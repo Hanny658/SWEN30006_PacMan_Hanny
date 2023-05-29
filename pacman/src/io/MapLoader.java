@@ -12,7 +12,6 @@ import ch.aplu.jgamegrid.Location;
 import ch.aplu.util.Size;
 import src.validation.LevelChecker;
 import src.models.entities.*;
-import src.models.entities.monsters.TX5;
 
 import java.awt.*;
 import java.io.FileInputStream;
@@ -113,7 +112,7 @@ public final class MapLoader
 		return itemLocations;
 	}
 
-	public static boolean loadFromXml(GameGrid grid, String filename)
+	public static boolean fromXml(GameGrid grid, String filename)
 	{
 		var gameMap = GameMapXmlParser.loadEntityFromXml(filename);
 		var valid = LevelChecker.checkMap(gameMap, filename);
