@@ -53,20 +53,28 @@ public class Game extends GameGrid
 	private boolean _gameStopped = false;
 	private boolean _win = false;
 	private boolean _autoMode = false;
+	private String _testMap = null;
 
 	private Game()
 	{
 		super(DEFAULT_WIDTH, DEFAULT_HEIGHT, CELL_SIZE, ENGINE_DEBUG_MODE);
 	}
 
-	public static boolean newGame(String gameFolder)
+	public static boolean newGame(String path, boolean testMap)
 	{
 		// Before creating new instance, dispose the previous instance
 		if (_instance != null)
 			_instance.getFrame().dispose();
 
-		// Load levels (perform game check and level checks)
-		var levels = GameLevels.fromFolder(gameFolder);
+		 GameLevels levels = null;
+		if (testMap)
+		{
+			// Load single level in a list of levels (contains only one item)
+			levels = GameLevels.fromSingleMap(path);
+		}
+		else
+			// Load levels (perform game check and level checks)
+			levels = GameLevels.fromFolder(path);
 
 		// If any check fails, do not create game instance
 		if (levels == null)
@@ -75,6 +83,8 @@ public class Game extends GameGrid
 		// If all check passed, start the game and initialise with the loaded levels
 		_instance = new Game();
 		_instance.init(levels);
+		if (testMap)
+			_instance._testMap = path;
 		return true;
 	}
 
@@ -307,7 +317,10 @@ public class Game extends GameGrid
 		this._gameStopped = true;
 		doPause();
 		hide();
-		Driver.RunEditor();
+		if (_testMap != null)
+			Driver.RunEditor(_testMap);
+		else
+			Driver.RunEditor();
 		editorRunning = true;
 	}
 

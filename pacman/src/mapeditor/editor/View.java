@@ -19,6 +19,8 @@ import src.mapeditor.grid.Camera;
 
 /**
  * The view of the application.
+ *
+ * Modified by Stephen Zhang to provide more robustness
  * 
  * @author Daniel "MaTachi" Jonsson
  * @version 1
@@ -80,11 +82,15 @@ public class View {
 		saveButton.addActionListener(controller);
 		saveButton.setActionCommand("save");
 
-		JButton loadButton = new JButton("Load");
+		JButton saveAsButton = new JButton("Save As...");
+		saveAsButton.addActionListener(controller);
+		saveAsButton.setActionCommand("save-as");
+
+		JButton loadButton = new JButton("Open...");
 		loadButton.addActionListener(controller);
 		loadButton.setActionCommand("load");
 
-		JButton testButton = new JButton("Test Map");
+		JButton testButton = new JButton("Save & test map");
 		testButton.addActionListener(controller);
 		testButton.setActionCommand("test");
 
@@ -94,6 +100,7 @@ public class View {
 		right.setBorder(border);
 		// right.add(showGridButton);
 		right.add(saveButton);
+		right.add(saveAsButton);
 		right.add(loadButton);
 		right.add(testButton);
 

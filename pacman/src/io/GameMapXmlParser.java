@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 /**
  *
  */
-class GameMapXmlParser
+public class GameMapXmlParser
 {
 	/** Load to a map of entities and their locations from XML */
 	public static GameMap loadEntityFromXml(String fileName)

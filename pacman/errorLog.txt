@@ -1,0 +1,8 @@
+allitems - portal White count is not 2: (9,1)
+allitems - portal DarkGold count is not 2: (11,1)
+allitems - portal DarkGray count is not 2: (12,1)
+allitems - portal Yellow count is not 2: (10,1)
+222 - portal White count is not 2: (9,1)
+222 - portal DarkGold count is not 2: (11,1)
+222 - portal DarkGray count is not 2: (12,1)
+222 - portal Yellow count is not 2: (10,1)

@@ -5,6 +5,7 @@ import src.models.Pair;
 import src.validation.LevelChecker;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -43,6 +44,16 @@ public class GameLevels
         if (sortedGameMaps == null)
             return null;
         return new GameLevels(sortedGameMaps);
+    }
+
+    public static GameLevels fromSingleMap(String mapFilename)
+    {
+        LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+        map.put(0, mapFilename);
+        var gameMap = loadLevels(map);
+        if (gameMap == null)
+            return null;
+        return new GameLevels(gameMap);
     }
 
     private static LinkedHashMap<Integer, String> getValidMaps(String gameFolder)
