@@ -4,6 +4,9 @@ import src.models.GameMap;
 
 import java.util.Arrays;
 
+/**
+ * Checks if the xml file can be deserialised, and if it contains both size and entity list
+ */
 public class FileFormatCheck implements LevelCheck
 {
 	private static final String XML_INVALID = "game map xml file invalid";

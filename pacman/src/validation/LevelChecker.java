@@ -1,3 +1,7 @@
+/**
+ * Created by Stephen Zhang & Hanny Zhang (Team 08)
+ */
+
 package src.validation;
 
 import src.validation.levelchecks.*;
@@ -8,6 +12,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A static class for checking if a level is valid (level check)
+ */
 public class LevelChecker
 {
     private static final List<LevelCheck> _checks = new ArrayList<>();
@@ -67,9 +74,6 @@ public class LevelChecker
                 }
             }
         }
-        // TODO: DEBUG
-        if (passed)
-            System.err.printf("Level check passed: %s\n", filename);
         return passed;
     }
 }

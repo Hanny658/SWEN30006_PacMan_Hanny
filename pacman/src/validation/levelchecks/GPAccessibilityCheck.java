@@ -1,7 +1,6 @@
 package src.validation.levelchecks;
 
 import ch.aplu.jgamegrid.Location;
-import src.Alistair;
 import src.models.Entity;
 import src.models.GameMap;
 import src.models.entities.*;
@@ -104,10 +103,7 @@ public class GPAccessibilityCheck implements LevelCheck
 					 *  We mark those dead-end portal as not accessible
 					 * */
 					if (isDeadEnd(gameMap, destination))
-					{
-						Alistair.observeAll("Observed Deadend!");
 						continue;
-					}
 
 					accessibleArea.add(destination);
 

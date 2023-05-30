@@ -1,16 +1,18 @@
+/**
+ * Created by Stephen Zhang (Team 08)
+ */
+
 package src.io;
 
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import src.models.GameMap;
 import src.models.GameMapSchema;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 /**
- *
+ * Parse the XML map file into a GameMap object
  */
 public class GameMapXmlParser
 {

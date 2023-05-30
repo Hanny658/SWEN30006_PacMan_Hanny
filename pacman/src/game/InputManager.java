@@ -47,6 +47,10 @@ public class InputManager implements GGKeyRepeatListener
 		this._game = game;
 	}
 
+	/**
+	 * Set the entity for player to control. If set to null then any command to entity will be ignored.
+	 * @param entityToControl the entity to control
+	 */
 	public void setEntityToControl(Entity entityToControl) { _entityToControl = entityToControl; }
 
 	/**
@@ -57,6 +61,7 @@ public class InputManager implements GGKeyRepeatListener
 	@Override
 	public void keyRepeated(int keyCode)
 	{
+		// At anytime, press ESC to go back to editor (not requested by specs)
 		if (keyCode == KeyEvent.VK_ESCAPE)
 			_game.returnToEditor();
 

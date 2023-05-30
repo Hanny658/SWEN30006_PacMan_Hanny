@@ -1,6 +1,9 @@
+/**
+ * Created by Stephen Zhang (Team 08)
+ */
+
 package src.models;
 
-import ch.aplu.util.Size;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -51,7 +54,6 @@ public class GameMapSchema
 
 	public static class Row
 	{
-
 		private ArrayList<String> _cells;
 
 		@XmlElement(name = CELL_NODE)

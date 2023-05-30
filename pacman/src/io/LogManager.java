@@ -41,9 +41,6 @@ public class LogManager
 		try
 		{
 			_errorLogWriter.write(str);
-
-			// TODO: DEBUG
-			System.err.println(str);
 			_errorLogWriter.write("\n");
 			_errorLogWriter.flush();
 		}

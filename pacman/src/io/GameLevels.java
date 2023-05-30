@@ -1,3 +1,7 @@
+/**
+ * Created by Stephen Zhang & Hanny Zhang (Team 08)
+ */
+
 package src.io;
 
 import src.models.GameMap;
@@ -5,12 +9,13 @@ import src.models.Pair;
 import src.validation.LevelChecker;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * Class responsible for check for Game folder integrity
+ * Class representing a list of levels for the game to advance
+ * <p>
+ * Before loading levels, it also checks for Game folder integrity (game check)
  * a. at least one correctly named map file in the folder
  * b. the sequence of map files well-defined (only one map named with a particular number)
  */
@@ -26,18 +31,16 @@ public class GameLevels
         this._levels = levels;
     }
 
-    /** Check the validity of a GameMap Folder and returns null if any check(s) failed.
-     *  return a sorted LinkedHashMap that keep entry in order for the game level */
+    /**
+     * Load levels from a folder
+     * @param gameFolder the folder to check
+     * @return a sorted LinkedHashMap that keep entry in order for the game level
+     */
     public static GameLevels fromFolder(String gameFolder)
     {
         var sortedMapFiles = getValidMaps(gameFolder);
         if (sortedMapFiles == null)
-        {
-            System.err.println("Game check failed.");
             return null;
-        }
-
-        System.err.println("Game check passed. Loading levels...");
 
         // Conduct level checking if file checking all passed
         var sortedGameMaps = loadLevels(sortedMapFiles);
@@ -46,6 +49,11 @@ public class GameLevels
         return new GameLevels(sortedGameMaps);
     }
 
+    /**
+     * Only load a single map (for map test)
+     * @param mapFilename name of the map
+     * @return a list containing only the single map
+     */
     public static GameLevels fromSingleMap(String mapFilename)
     {
         LinkedHashMap<Integer, String> map = new LinkedHashMap<>();

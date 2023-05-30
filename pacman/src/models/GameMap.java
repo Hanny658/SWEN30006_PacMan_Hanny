@@ -1,3 +1,7 @@
+/**
+ * Created by Stephen Zhang & Hanny Zhang (Team 08)
+ */
+
 package src.models;
 
 import ch.aplu.jgamegrid.Location;
@@ -9,6 +13,9 @@ import src.models.entities.monsters.Troll;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A class representing a single game map (entities and their locations)
+ */
 public class GameMap
 {
 	private static final Map<String, Entity> NAME_TO_ENTITY = new HashMap<>();
@@ -31,13 +38,28 @@ public class GameMap
 	private final Map<Location, Entity> _entities;
 	private final Size _size;
 
+	/**
+	 * Create a new game map with entities and given map sizwe
+	 * @param entities the entities
+	 * @param mapSize the map size
+	 */
 	public GameMap(Map<Location, Entity> entities, Size mapSize)
 	{
 		_entities = entities;
 		_size = mapSize;
 	}
 
+	/**
+	 * Get a map of entities (value) and their locations (key).
+	 * @return a map of entities and locations
+	 */
 	public Map<Location, Entity> getEntities() { return _entities; }
+
+	/**
+	 * Get the entity at the given location
+	 * @param atLocation the location
+	 * @return the entity that is on the give location
+	 */
 	public Entity getEntityAt(Location atLocation)
 	{
 		for (var entry : getEntities().entrySet())
@@ -52,6 +74,11 @@ public class GameMap
 
 	public Size getSize() { return _size; }
 
+	/**
+	 * Converts GameMapSchema to GameMap
+	 * @param map the schema
+	 * @return a game map
+	 */
 	public static GameMap fromGameMapSchema(GameMapSchema map)
 	{
 		if (map == null)

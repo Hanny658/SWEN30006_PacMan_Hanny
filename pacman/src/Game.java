@@ -1,21 +1,22 @@
 /**
  * Modified by Stephen Zhang & Hanny Zhang (Team 08)
  * <p>
- * Busy waiting removed; responsibilities reduced by delegating non-cohesive ones to other classes;
- * magic numbers and magic strings are extracted as constants.
- * Support for multiverse extension implemented.
+ * Responsibilities striped further
+ * Implements Singleton pattern
  */
 
 package src;
 
 import ch.aplu.jgamegrid.GameGrid;
-import ch.aplu.jgamegrid.Location;
-import src.game.*;
+import src.game.InputManager;
+import src.game.PortalManager;
 import src.io.GameCallback;
-import src.io.LogManager;
-import src.models.Collidable;
-import src.models.entities.*;
 import src.io.GameLevels;
+import src.io.LogManager;
+import src.models.entities.GoldPiece;
+import src.models.entities.PacMan;
+import src.models.entities.Pill;
+import src.models.entities.Portal;
 
 import java.awt.*;
 import java.io.FileInputStream;
@@ -88,6 +89,10 @@ public class Game extends GameGrid
 		return true;
 	}
 
+	/**
+	 * Get the instance of the game (or create one if non-exist)
+	 * @return a singleton instance of Game
+	 */
 	public static Game getGame()
 	{
 		// Create instance
@@ -96,16 +101,68 @@ public class Game extends GameGrid
 		return _instance;
 	}
 
+	public boolean isGameStopped() { return _gameStopped; }
+
+	private InputManager getInputManager()
+	{
+		if (_playerInput == null)
+			_playerInput = new InputManager(this);
+		return _playerInput;
+	}
+
+	/**
+	 * Record the number of pills eaten for logging usage. This includes pills and golds.
+	 *
+	 * @param byValue increase by
+	 * @see GameCallback
+	 */
+	public void changeNumPillsEaten(int byValue)
+	{
+		_numPillsEaten += byValue;
+	}
+
+	public int getScore()
+	{
+		return _score;
+	}
+	public void changeScore(int byValue)
+	{
+		_score += byValue;
+		this.setTitle(String.format(SCORE_TITLE, GAME_TITLE, _score));
+	}
+
+	/**
+	 * Gets the number of pills and golds eaten
+	 *
+	 * @return the number
+	 * @see GameCallback
+	 */
+	public int getNumPillsEaten()
+	{
+		return _numPillsEaten;
+	}
+
+	/**
+	 * Set the game to be stopped and set the game result
+	 *
+	 * @param isWin if the game has won
+	 */
+	public void stopGame(boolean isWin)
+	{
+		this._gameStopped = true;
+		this._win = isWin;
+	}
+
+	public PacMan getPlayer()
+	{
+		return _player;
+	}
+
 	/**
 	 * Initialise a game (Load map and properties)
 	 */
 	private void init(GameLevels levels)
 	{
-		// TODO: DEBUG
-		System.err.println("Game started with maps:");
-		levels.getLevels().forEach(value ->
-				System.err.printf("%s\n", value));
-
 		// Setup game
 		setSimulationPeriod(SIMULATION_PERIOD);
 		setTitle(GAME_TITLE);
@@ -118,8 +175,9 @@ public class Game extends GameGrid
 		setKeyRepeatPeriod(KEY_REPEAT_PERIOD);
 	}
 
-	public boolean isGameStopped() { return _gameStopped; }
-
+	/**
+	 * Load the current level and start the game
+	 */
 	public void startGame()
 	{
 		loadLevel(_currentLevel);
@@ -168,13 +226,6 @@ public class Game extends GameGrid
 		_portalManager = new PortalManager();
 		_portalManager.autoRegister(portals);
 		doRun();
-	}
-
-	private InputManager getInputManager()
-	{
-		if (_playerInput == null)
-			_playerInput = new InputManager(this);
-		return _playerInput;
 	}
 
 	/**
@@ -265,50 +316,9 @@ public class Game extends GameGrid
 			loadLevel(++_currentLevel);
 	}
 
-	public void changeScore(int byValue)
-	{
-		_score += byValue;
-		this.setTitle(String.format(SCORE_TITLE, GAME_TITLE, _score));
-	}
-
 	/**
-	 * Record the number of pills eaten for logging usage. This includes pills and golds.
-	 *
-	 * @param byValue increase by
-	 * @see GameCallback
+	 * Return to editor (if in test map mode, load this map, otherwise leave empty)
 	 */
-	public void changeNumPillsEaten(int byValue)
-	{
-		_numPillsEaten += byValue;
-	}
-
-	public int getScore()
-	{
-		return _score;
-	}
-
-	/**
-	 * Gets the number of pills and golds eaten
-	 *
-	 * @return the number
-	 * @see GameCallback
-	 */
-	public int getNumPillsEaten()
-	{
-		return _numPillsEaten;
-	}
-
-	/**
-	 * Set the game to be stopped and set the game result
-	 *
-	 * @param isWin if the game has won
-	 */
-	public void stopGame(boolean isWin)
-	{
-		this._gameStopped = true;
-		this._win = isWin;
-	}
-
 	public void returnToEditor()
 	{
 		if (editorRunning)
@@ -322,11 +332,6 @@ public class Game extends GameGrid
 		else
 			Driver.RunEditor();
 		editorRunning = true;
-	}
-
-	public PacMan getPlayer()
-	{
-		return _player;
 	}
 
 	public void reportPlayerStatus()

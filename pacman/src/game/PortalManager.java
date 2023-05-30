@@ -1,5 +1,7 @@
 /**
  * Manages portal pairing and teleportation helping.
+ * <p>
+ * Created by Stephen Zhang (Team 08)
  */
 package src.game;
 
@@ -10,15 +12,31 @@ import src.models.entities.Portal;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * A helper class handling portals
+ */
 public class PortalManager
 {
 	private ArrayList<Pair<Portal, Portal>> _portalRegistry = new ArrayList<>();
+
+	/**
+	 * Check if a portal is registered (with its pair)
+	 * @param portal the portal to check
+	 * @return if the portal is in the registry
+	 */
 	public boolean isRegistered(Portal portal)
 	{
 		return getPairedPortal(portal) != null;
 	}
 
+	/**
+	 * Automatically register as many portals as possible in a list of portals
+	 * <p>
+	 * The registration can only be done with portals in pairs. So any portals left not registered
+	 * are considered as invalid portals.
+	 * @param portals a list of portals to be registered
+	 * @return if all the portals are successfully registered (valid)
+	 */
 	public boolean autoRegister(List<Portal> portals)
 	{
 		for (var portal1 : portals)
@@ -51,6 +69,11 @@ public class PortalManager
 		return true;
 	}
 
+	/**
+	 * Gets the other side of the portal (must be registered first)
+	 * @param portal a portal to look for its pair
+	 * @return the other portal
+	 */
 	public Portal getPairedPortal(Portal portal)
 	{
 		for (var pair : _portalRegistry)
@@ -63,6 +86,11 @@ public class PortalManager
 		return null;
 	}
 
+	/**
+	 * Teleport an entity through a portal to the other end
+	 * @param entity the entity to be teleported
+	 * @param portal1 the portal of entry
+	 */
 	public void teleport(Entity entity, Portal portal1)
 	{
 		Portal portal2 = getPairedPortal(portal1);
