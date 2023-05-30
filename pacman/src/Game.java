@@ -28,7 +28,7 @@ import java.util.Properties;
 
 public class Game extends GameGrid
 {
-	private static final String DEFAULT_PROPERTIES_PATH = "test.properties";
+	private static final String DEFAULT_PROPERTIES_PATH = "properties/test.properties";
 	private static final String GAME_TITLE = "[PacMan in the TorusVerse]";
 	private static final String SCORE_TITLE = "%s Current score: %d";
 	private static final String WIN_TITLE = "YOU WIN";

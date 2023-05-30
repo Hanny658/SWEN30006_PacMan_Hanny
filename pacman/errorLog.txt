@@ -1,3 +1,0 @@
--7superlong.xml - more than one start for Pacman: (19,1); (20,1)
--7superlong.xml - more than one start for Pacman: (20,1); (19,1)
--7superlong.xml - more than one start for Pacman: (20,1); (19,1)
