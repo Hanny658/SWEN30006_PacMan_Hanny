@@ -41,6 +41,7 @@ public class Game extends GameGrid
 	private static final boolean ENGINE_DEBUG_MODE = false;
 	private static final int SLOW_DOWN_FACTOR = 3;
 	private static Game _instance = null;
+	boolean editorRunning = false;
 	private PacMan _player;
 	private InputManager _playerInput;
 	private PortalManager _portalManager;
@@ -52,7 +53,6 @@ public class Game extends GameGrid
 	private boolean _gameStopped = false;
 	private boolean _win = false;
 	private boolean _autoMode = false;
-	
 
 	private Game()
 	{
@@ -76,6 +76,14 @@ public class Game extends GameGrid
 		_instance = new Game();
 		_instance.init(levels);
 		return true;
+	}
+
+	public static Game getGame()
+	{
+		// Create instance
+		if (_instance == null)
+			_instance = new Game();
+		return _instance;
 	}
 
 	/**
@@ -189,14 +197,6 @@ public class Game extends GameGrid
 		}
 	}
 
-	public static Game getGame()
-	{
-		// Create instance
-		if (_instance == null)
-			_instance = new Game();
-		return _instance;
-	}
-
 	/**
 	 * Simulation cycle of the game
 	 * <p>
@@ -219,18 +219,6 @@ public class Game extends GameGrid
 	}
 
 	/**
-	 * Gets a list of all Collidables that are at the given location
-	 *
-	 * @param atLocation the location for detection
-	 * @return a list of Collidables that are colliding
-	 * @see Collidable
-	 */
-	public List<Collidable> getAllCollidingsAt(Location atLocation)
-	{
-		return CollisionManager.getAllCollidingsAt(atLocation, this);
-	}
-
-	/**
 	 * Declare the game result by setting the title and logging
 	 *
 	 * @see GameCallback
@@ -250,7 +238,8 @@ public class Game extends GameGrid
 	}
 
 	/**
-	 * Check if the win condition (all pills and golds are eaten) is met. If so, stop the game and declare win.
+	 * Check if the win condition (all pills and golds are eaten) is met.
+	 * If so, advance to the next level until the last, then stop the game and declare win.
 	 */
 	public void checkWin()
 	{
@@ -310,7 +299,6 @@ public class Game extends GameGrid
 		this._win = isWin;
 	}
 
-	boolean editorRunning = false;
 	public void returnToEditor()
 	{
 		if (editorRunning)

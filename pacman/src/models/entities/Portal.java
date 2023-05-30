@@ -1,3 +1,10 @@
+/**
+ * Added by Hanny Zhang & Stephen Zhang (Team 08)
+ * <p>
+ * As the class of portal objects in game, being able to teleport any
+ * entity stepped on it with PortalManager.
+ */
+
 package src.models.entities;
 
 import src.game.PortalManager;

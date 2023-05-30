@@ -125,10 +125,9 @@ public abstract class Entity extends Actor implements Collidable, Cloneable
 			return false;
 		}
 
-		var collidables = Game.getGame().getAllCollidingsAt(newLocation);
-		for (var collidable : collidables)
+		for (var entity : gameGrid.getActorsAt(newLocation))
 		{
-			if (collidable instanceof Wall)
+			if (entity instanceof Wall)
 				return false;
 		}
 		return true;

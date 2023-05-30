@@ -1,3 +1,6 @@
+/**
+ * Manages portal pairing and teleportation helping.
+ */
 package src.game;
 
 import src.models.Entity;

@@ -22,8 +22,6 @@ public class PacMan extends Entity
 	private static final int DEFAULT_SPEED = 1;
 	private static final boolean INVINCIBLE = false;
 	private boolean _autoMode = false;
-	private Queue<Location> _pendingMoves = new LinkedList<>();
-	private int _autoMoveIndex = 0;
 
 	public PacMan()
 	{
@@ -52,103 +50,9 @@ public class PacMan extends Entity
 		return DEFAULT_SPEED;
 	}
 
-	/** Greedy Move from Project 1
-	 *  Now Upgrade to BFS to the closest Pill/Gold Position */
+	/** Greedy Move, just like TX5, but to the closest Gold/Pill location */
 	private void moveInAutoMode()
 	{
-		Location next;
-
-		// If there's no pending moves left
-//		if (_pendingMoves.isEmpty())
-//			this.findMyWay();
-
-		System.out.printf("Pending moves: %d\n", _pendingMoves.size());
-
-		// Move to next pending move
-		next = _pendingMoves.poll();
-		if (next == null)
-			System.out.println("Null");
-		else
-			System.out.printf("Next: (%d, %d)\n", next.getX(), next.getY());
-		if (next != null && canMove(next))
-		{
-			setLocation(next);
-			return;
-		}
-		// Or if it fails to find way
-		System.out.println("Start greedy");
-		this.greedyMove();
-	}
-
-	/** Find way to the closest Pill/Gold with BFS algorithm */
-	private void findMyWay()
-	{
-		Location startPos = getLocation();
-		Location destPos = closestGPLocation();
-		Set<Location> visited = new HashSet<>();
-
-		// Use HashMap instead of BFSNode that stores [Current Pos: FromPos]
-		Map<Location, Location> fromTable = new HashMap<>();
-		Queue<Location> queue = new LinkedList<>();
-
-		visited.add(startPos);
-		queue.add(startPos);
-		Location curr = null;
-
-		// Start BFS until reached aiming position
-		while (!queue.isEmpty())
-		{
-			curr = queue.poll();
-
-			// if current position is not movable
-			if (!canMove(curr))
-				continue;
-			visited.add(curr);
-
-			// If reached aimed Location
-			if (curr.x == destPos.x && curr.y == destPos.y)
-				break;
-
-			// Check if a portal is encountered
-			var actorsWithMe = this.gameGrid.getActorsAt(curr);
-			for (Actor a : actorsWithMe)
-			{
-				if (a instanceof Portal)
-				{
-					// if so, teleport to the destination and continue spanning
-					Location dest = ((Portal) a).getManager().getPairedPortal((Portal) a).getLocation();
-					fromTable.put(dest, curr);
-					curr = dest;
-				}
-			}
-
-			// Expand to neighboring locations
-			List<Location> neighbors = curr.getNeighbourLocations(1);
-			for (Location neighbour : neighbors)
-			{
-				if (canMove(neighbour) && visited.contains(neighbour))
-				{
-					queue.add(neighbour);
-					fromTable.put(neighbour, curr);
-				}
-			}
-		}
-		// Extract path to the pendingMoves list
-		List<Location> revPath = new ArrayList<>();
-		while (!curr.equals(startPos))
-		{
-			revPath.add(curr);
-			curr = fromTable.get(curr);
-		}
-		// Store back to the pending moves
-		for (int i = revPath.size(); i>0; i--)
-			this._pendingMoves.add(revPath.get(i-1));
-	}
-
-	//TODO: delete/refactor [GreedyMove]
-	private void greedyMove(){
-		System.out.println("Greedy");
-		// Greedy Part
 		Location closestPill = closestGPLocation();
 		double oldDirection = getDirection();
 
@@ -199,7 +103,6 @@ public class PacMan extends Entity
 			}
 		}
 		this.addVisitedList(next);
-		System.out.println("Greedy Done");
 	}
 
 	@Override
